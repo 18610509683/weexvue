@@ -1,0 +1,685 @@
+<!--
+ * @Description: 垃圾信息管理页面
+ -->
+ 
+<template>
+  <div class="app-container foodincome-con">
+    <el-card class="box-card">
+      <div
+        slot="header"
+        class="clearfix"
+      >
+        <span>食谱列表</span>
+      </div>
+      <div class="filter-container">
+        <el-row>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">食谱名称</div>
+            <el-input
+              class="filter-input"
+              size="small"
+              v-model="listQuery.name"
+              placeholder="食谱名称"
+            ></el-input>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">状态</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.status"
+              placeholder="状态"
+              clearable
+            >
+              <el-option
+                v-for="(item,index) in statusOptions"
+                :key="index"
+                :label="item.name"
+                :value="item.val"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">视频</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.has_video"
+              placeholder="视频"
+              clearable
+            >
+              <el-option
+                v-for="(item,index) in hasVideoOptions"
+                :key="index"
+                :label="item.name"
+                :value="item.val"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">来源</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.source"
+              placeholder="来源"
+              clearable
+            >
+              <el-option
+                v-for="(item,index) in sourceOptions"
+                :key="index"
+                :label="item.name"
+                :value="item.val"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">时令</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.season"
+              placeholder="时令"
+              clearable
+            >
+              <el-option
+                v-for="item in seasonOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">节日</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.festival"
+              placeholder="节日"
+              clearable
+            >
+              <el-option
+                v-for="item in festivalOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">设备</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.device"
+              placeholder="设备"
+              clearable
+            >
+              <el-option
+                v-for="item in deviceOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-col>
+
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">功效</div>
+            <el-input
+              class="filter-input"
+              size="small"
+              v-model="listQuery.function"
+              placeholder="功效"
+            ></el-input>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">适宜人群</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.suitable_people"
+              placeholder="适宜人群"
+              clearable
+            >
+              <el-option
+                v-for="item in peopleOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-col>
+
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">适宜疾病</div>
+            <el-input
+              class="filter-input"
+              size="small"
+              v-model="listQuery.suitable_sick"
+              placeholder="适宜疾病"
+            ></el-input>
+          </el-col>
+          <el-col
+            class="filter-item"
+            :xs="12"
+            :sm="8"
+            :lg="6"
+          >
+            <div class="filter-title">适宜阶段</div>
+            <el-select
+              class="filter-input"
+              size="small"
+              v-model="listQuery.suitable_physiology"
+              placeholder="适宜阶段"
+              clearable
+            >
+              <el-option
+                v-for="item in physiologyOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-col>
+
+          <el-col
+            class="filter-item"
+            :xs="24"
+            :sm="12"
+            :lg="6"
+          >
+            <el-button
+              size="small"
+              type="primary"
+              icon="el-icon-search"
+              @click="handleFilter"
+            >查询</el-button>
+            <!-- <el-button
+              size="small"
+              style="margin-left: 10px;"
+              type="primary"
+              icon="el-icon-edit"
+              @click="toCreate()"
+            >新建食材</el-button> -->
+            <el-button
+              size="small"
+              style="margin-left: 10px;"
+              type="success"
+              icon="el-icon-refresh"
+              @click="syncIOTRecipes()"
+            >同步IOT食谱</el-button>
+          </el-col>
+          <el-col :span="8"></el-col>
+        </el-row>
+      </div>
+
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        @sort-change="sortChange"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%;"
+      >
+        <el-table-column
+          label="ID"
+          align="center"
+          prop="id"
+        ></el-table-column>
+        <el-table-column
+          label="食谱名称"
+          align="center"
+          prop="name"
+        ></el-table-column>
+        <el-table-column
+          label="封面图"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <img
+              v-if="scope.row.image"
+              class="recipeIcon"
+              :src="scope.row.image"
+            >
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="视频"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.has_video == 1 ? '是' : '否'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="来源"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.source | sourceFilter}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="设备品类"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.device | tagsFilter }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="时令"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.season | tagsFilter }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="节日"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.festival | tagsFilter }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="功效"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.effect | tagsFilter }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="适宜人群"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.suitable_people | tagsFilter }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="适宜阶段"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.suitable_physiology | tagsFilter }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="适宜疾病"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.suitable_sick | tagsFilter }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="状态"
+          align="center"
+        >
+          <template slot-scope="{row}">
+            <el-tag :type="row.status | tagCssFilter">{{ row.status | statusFilter }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="创建时间"
+          align="center"
+          prop="create_time"
+        ></el-table-column>
+        <el-table-column
+          label="更新时间"
+          align="center"
+          prop="update_time"
+        ></el-table-column>
+        <el-table-column
+          label="操作"
+          align="center"
+          width="230"
+          class-name="small-padding fixed-width"
+        >
+          <template slot-scope="{row}">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="toCreate(row.id)"
+            >编辑</el-button>
+            <el-button
+              v-if="row.status == 2"
+              type="success"
+              size="mini"
+              @click="changeStatus(row)"
+            >上架</el-button>
+            <el-button
+              v-else
+              type="info"
+              size="mini"
+              @click="changeStatus(row)"
+            >下架</el-button>
+            <el-button
+              v-if="row.status!='deleted'"
+              size="mini"
+              type="danger"
+              @click="handleDelete(row)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.page_size"
+        @pagination="getList"
+      />
+    </el-card>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.filter-container {
+  .filter-item {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    .filter-title {
+      margin-right: 3px;
+      min-width: 80px;
+    }
+    .filter-input {
+      width: 160px;
+    }
+  }
+}
+.recipeIcon {
+  width: 100px;
+  height: 100px;
+}
+</style>
+<style>
+.foodincome-con .el-card__body {
+  padding: 20px 40px;
+}
+.foodincome-con .p-dialog {
+  border-radius: 5px;
+}
+</style>
+
+<script>
+import {
+  fetchRecipesList,
+  fetchAllTag,
+  fetchAllFoodType,
+  updateRecipeStatus,
+  delRecipe
+} from "@/api/foodManager.js";
+import { parseTime } from "@/utils";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
+
+export default {
+  name: "foodIncome",
+  components: { Pagination },
+  filters: {
+    statusFilter(val) {
+      if (val == 1) {
+        return "上架";
+      } else {
+        return "下架";
+      }
+    },
+    tagCssFilter(type) {
+      let css = {
+        "1": "success",
+        "2": "info"
+      };
+      return css[type];
+    },
+    sourceFilter(val) {
+      switch (val) {
+        case 1:
+          return " IOT";
+          break;
+        case 2:
+          return "掌厨";
+          break;
+
+        default:
+          return "运营编辑";
+          break;
+      }
+    },
+    tagsFilter(arr) {
+      if (arr) {
+        let tagsArr = [];
+        for (let index = 0; index < arr.length; index++) {
+          const el = arr[index];
+          tagsArr.push(el.tag_name);
+        }
+        return tagsArr.join(",");
+      } else {
+        return "";
+      }
+    }
+  },
+  data() {
+    return {
+      list: [],
+      total: 3,
+      listLoading: true,
+      listQuery: {
+        name: null, //名称
+        status: null, //状态
+        has_video: null, //是否有视频
+        source: null, //来源
+        season: null, //时令
+        festival: null, //节日
+        device: null, //设备品类
+        function: null, //功效
+        suitable_people: null, //适应人群
+        suitable_sick: null, //适宜疾病
+        suitable_physiology: null, //适宜生理阶段
+
+        page: 1,
+        page_size: 20
+      },
+
+      timeRange: "",
+      statusOptions: [
+        { val: 1, name: "上架" },
+        { val: 2, name: "下架" }
+      ],
+      hasVideoOptions: [
+        { val: 1, name: "是" },
+        { val: 2, name: "否" }
+      ],
+      sourceOptions: [
+        { val: 1, name: "IOT" },
+        { val: 2, name: "掌厨" },
+        { val: 3, name: "运营编辑" }
+      ],
+
+      seasonOptions: [],
+      festivalOptions: [],
+      peopleOptions: [],
+      deviceOptions: [],
+      physiologyOptions: [],
+
+      downloadLoading: false
+    };
+  },
+  computed: {},
+  watch: {},
+  created() {
+    //获取季节数据
+    fetchAllTag({ type_id: 1 }).then(res => {
+      this.seasonOptions = res.data;
+    });
+    //获取节日数据
+    fetchAllTag({ type_id: 2 }).then(res => {
+      this.festivalOptions = res.data;
+    });
+    //获取适应人群数据
+    fetchAllTag({ type_id: 3 }).then(res => {
+      this.peopleOptions = res.data;
+    });
+    //获取设备品类数据
+    fetchAllTag({ type_id: 10 }).then(res => {
+      this.deviceOptions = res.data;
+    });
+    //获取生理阶段数据
+    fetchAllTag({ type_id: 4 }).then(res => {
+      this.physiologyOptions = res.data;
+    });
+    this.refreshList();
+  },
+  methods: {
+    /**
+     * @description: 获取垃圾信息列表的数据
+     */
+    refreshList() {
+      this.listQuery.page = 1;
+      this.getList();
+    },
+    getList() {
+      this.listLoading = true;
+
+      for (const key in this.listQuery) {
+        // 去除对象内多余的空值key
+        if (this.listQuery[key] === null) {
+          delete this.listQuery[key];
+        }
+      }
+
+      fetchRecipesList(this.listQuery).then(response => {
+        this.total = response.data.total;
+        this.list = response.data.data;
+        this.listLoading = false;
+      });
+    },
+
+    handleFilter() {
+      this.refreshList();
+    },
+    sortChange(data) {
+      console.log(data);
+    },
+    /**
+     * @description: 删除垃圾信息
+     * @param row
+     */
+    handleDelete(row) {
+      this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          delRecipe({ id: row.id }).then(() => {
+            for (const v of this.list) {
+              if (v.id === row.id) {
+                const index = this.list.indexOf(v);
+                this.list.splice(index, 1);
+                break;
+              }
+            }
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    //上下架
+    changeStatus(row) {
+      let newRow = Object.assign({}, row);
+      if (newRow.status == 1) {
+        newRow.status = 2;
+      } else {
+        newRow.status = 1;
+      }
+      newRow.alias = newRow.name_alias;
+      updateRecipeStatus(newRow).then(() => {
+        this.getList();
+        this.$message({
+          type: "success",
+          message: "操作成功"
+        });
+      });
+    },
+    //跳转创建编辑页面
+    toCreate(id) {
+      if (id) {
+        this.$router.push("/recipesManager/edit/" + id);
+      } else {
+        this.$router.push("/recipesManager/create");
+      }
+    },
+    //同步iot食谱
+    syncIOTRecipes() {}
+  }
+};
+</script>
+
+
+
