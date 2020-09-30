@@ -3,11 +3,11 @@
  */
 import request from '@/utils/request'
 
-let modelHeader = '/fridge'
+let modelHeader = '/admin'
 //标签列表
 export function fetchTagList(data) {
   return request({
-    url: modelHeader+'/FoodTags/tagList',
+    url: modelHeader+'/EatTagManager/tagList',
     method: 'post',
     data
   })
@@ -15,7 +15,7 @@ export function fetchTagList(data) {
 //增加标签
 export function addTag(data) {
   return request({
-    url: modelHeader+'/FoodTags/insert',
+    url: modelHeader+'/EatTagManager/save',
     method: 'post',
     data
   })
@@ -23,7 +23,7 @@ export function addTag(data) {
 //编辑标签
 export function updateTag(data) {
   return request({
-    url: modelHeader+'/FoodTags/edit',
+    url: modelHeader+'/EatTagManager/update',
     method: 'post',
     data
   })
