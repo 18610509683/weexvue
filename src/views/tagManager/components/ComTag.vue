@@ -1,7 +1,7 @@
 <!--
  * @Description: 垃圾信息管理页面
  -->
- 
+
 <template>
   <div class="app-container garbage-con">
     <el-card class="box-card">
@@ -9,57 +9,16 @@
         <span>{{title}}</span>
       </div>
       <div class="filter-container">
-        <el-input
-          class="filter-item"
-          style="width: 180px;margin-right: 10px;"
-          v-model="listQuery.name"
-          placeholder="请输入标签名称"
-        ></el-input>
-        <el-select
-          v-model="listQuery.source"
-          placeholder="来源"
-          clearable
-          class="filter-item"
-          style="width: 130px"
-        >
-          <el-option
-            v-for="(item,i) in sourcesOptions"
-            :key="i"
-            :label="item.label"
-            :value="item.value"
-          />
+        <el-input class="filter-item" style="width: 180px;margin-right: 10px;" v-model="listQuery.name" placeholder="请输入标签名称"></el-input>
+        <el-select v-model="listQuery.source" placeholder="来源" clearable class="filter-item" style="width: 130px">
+          <el-option v-for="(item,i) in sourcesOptions" :key="i" :label="item.label" :value="item.value"/>
         </el-select>
 
-        <el-select
-          v-model="listQuery.status"
-          placeholder="状态"
-          clearable
-          class="filter-item"
-          style="width: 130px;margin-left: 10px;"
-        >
-          <el-option
-            v-for="(item,i) in statusOptions"
-            :key="i"
-            :label="item.label"
-            :value="item.value"
-          />
+        <el-select v-model="listQuery.status" placeholder="状态" clearable class="filter-item" style="width: 130px;margin-left: 10px;">
+          <el-option v-for="(item,i) in statusOptions" :key="i" :label="item.label" :value="item.value"/>
         </el-select>
-
-        <el-button
-          class="filter-item"
-          style="margin-left: 10px;"
-          type="primary"
-          icon="el-icon-search"
-          @click="handleFilter"
-        >查询</el-button>
-
-        <el-button
-          class="filter-item"
-          style="margin-left: 10px;"
-          type="primary"
-          icon="el-icon-edit"
-          @click="handleCreate"
-        >新增</el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">查询</el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
         <!-- <el-button
           :loading="downloadLoading"
           class="filter-item upload-img-con"
@@ -69,31 +28,18 @@
         >导出</el-button>-->
       </div>
 
-      <el-table
-        v-loading="listLoading"
-        :data="list"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%;"
-      >
+      <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%;">
         <el-table-column label="ID" prop="id" align="center" width="80"></el-table-column>
-
         <el-table-column label="标签名称" align="center">
           <template slot-scope="{row}">
             <div>
-              <img
-                v-if="row.image && row.image.length>0"
-                class="garbage-img"
-                :src="row.image"
-                @click="handleGarbageImgPreview(row)"
-              />
+              <img v-if="row.image && row.image.length>0" class="garbage-img" :src="row.image" @click="handleGarbageImgPreview(row)" />
               <div>{{row.name}}</div>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column label="标签别名" align="center" prop="name_alias"></el-table-column>
+        <el-table-column label="标签别名" align="center" prop="aliasName"></el-table-column>
         <el-table-column label="来源" align="center">
           <template slot-scope="scope">
             <span>{{scope.row.source | sourceFilter}}</span>
@@ -105,41 +51,19 @@
           </template>
         </el-table-column>
         <el-table-column label="备注" align="center" prop="remark"></el-table-column>
-        <el-table-column label="创建时间" align="center" prop="create_time"></el-table-column>
-        <el-table-column label="更新时间" align="center" prop="update_time"></el-table-column>
-
-        <el-table-column
-          label="操作"
-          align="center"
-          width="230"
-          class-name="small-padding fixed-width"
-        >
+        <el-table-column label="创建时间" align="center" prop="createTime"></el-table-column>
+        <el-table-column label="更新时间" align="center" prop="updateTime"></el-table-column>
+        <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template slot-scope="{row}">
             <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
-            <el-button
-              v-if="row.status == 2"
-              type="success"
-              size="mini"
-              @click="changeStatus(row)"
-            >上架</el-button>
+            <el-button v-if="row.status != 1" type="success" size="mini" @click="changeStatus(row)">上架</el-button>
             <el-button v-else type="info" size="mini" @click="changeStatus(row)">下架</el-button>
-            <el-button
-              v-if="row.status!='deleted'"
-              size="mini"
-              type="danger"
-              @click="handleDelete(row)"
-            >删除</el-button>
+            <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.page_size"
-        @pagination="getList"
-      />
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.page_size" @pagination="getList"/>
     </el-card>
 
     <el-dialog
@@ -159,7 +83,7 @@
           <el-input v-model="temp.name" />
         </el-form-item>
         <el-form-item label="标签别名" prop="alias">
-          <el-input v-model="temp.alias" />
+          <el-input v-model="temp.aliasName" />
         </el-form-item>
         <el-form-item label="来源" prop="source">
           <el-select v-model="temp.source" class="filter-item" placeholder="请选择">
@@ -266,7 +190,7 @@ export default {
       title: "",
       list: null,
       total: 0,
-      type_id: null,
+      typeId: null,
       listLoading: true,
       statusOptions: [{ value: 1, label: "上架" }, { value: 2, label: "下架" }],
       sourcesOptions: [
@@ -278,7 +202,7 @@ export default {
         name: null,
         source: null, //来源
         status: null, //状态
-        type_id: null, //标签类型
+        typeId: null, //标签类型
         page: 1,
         page_size: 20
       },
@@ -325,62 +249,62 @@ export default {
     switch (this.type) {
       case "Season":
         this.title = "时令";
-        this.type_id = 1;
+        this.typeId = 1;
         break;
 
       case "Crowd":
         this.title = "人群";
-        this.type_id = 3;
+        this.typeId = 3;
         break;
 
       case "Disease":
         this.title = "疾病";
-        this.type_id = 6;
+        this.typeId = 6;
         break;
 
       case "Effect":
         this.title = "功效";
-        this.type_id = 5;
+        this.typeId = 5;
         break;
 
       case "Festival":
         this.title = "节日";
-        this.type_id = 2;
+        this.typeId = 2;
         break;
 
       case "LifeStage":
         this.title = "生理阶段";
-        this.type_id = 4;
+        this.typeId = 4;
         break;
 
       case "Taste":
         this.title = "口味";
-        this.type_id = 7;
+        this.typeId = 7;
         break;
 
       case "Caixi":
         this.title = "菜系";
-        this.type_id = 8;
+        this.typeId = 8;
         break;
 
       case "Caishi":
         this.title = "菜式";
-        this.type_id = 9;
+        this.typeId = 9;
         break;
 
       case "ShebeiPinlei":
         this.title = "设备品类";
-        this.type_id = 10;
+        this.typeId = 10;
         break;
 
       case "PengrenFangshi":
         this.title = "烹饪方式";
-        this.type_id = 11;
+        this.typeId = 11;
         break;
 
       case "Zhiye":
         this.title = "职业";
-        this.type_id = 12;
+        this.typeId = 12;
         break;
 
       default:
@@ -405,7 +329,7 @@ export default {
           delete this.listQuery[key];
         }
       }
-      this.listQuery.type_id = this.type_id;
+      this.listQuery.typeId = this.typeId;
       fetchTagList(this.listQuery).then(res => {
         this.total = res.data.total;
         this.list = res.data.data;
@@ -442,7 +366,7 @@ export default {
     createData() {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          this.temp.type_id = this.type_id;
+          this.temp.typeId = this.typeId;
           addTag(this.temp).then(() => {
             this.dialogFormVisible = false;
 
@@ -469,7 +393,7 @@ export default {
       } else {
         this.uploadImgList = [];
       }
-      
+
       console.log(this.uploadImgList);
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
@@ -534,7 +458,7 @@ export default {
       } else {
         newRow.status = 1;
       }
-      newRow.alias = newRow.name_alias;
+      newRow.alias = newRow.aliasName;
       updateTag(newRow).then(() => {
         this.getList();
         this.$message({
@@ -577,13 +501,14 @@ export default {
      * @description: 上传成功
      */
     uploadImgSuccess(response, file, fileList) {
-      console.log(response);
-      if (fileList.length > 0) {
-        this.temp.image = response.data.all_img_url;
+      if (fileList.length > 0 && response.code==200) {
+        this.postForm.image = response.data.all_img_url;
         //移除必填的提醒
-        // this.$refs["uploadFormItem"].clearValidate();
+        this.$refs["uploadFormItem"].clearValidate();
       } else {
-        this.temp.image = "";
+        this.$message('上传失败');
+        this.uploadImgList = [];
+        this.postForm.image = "";
       }
     },
     /**

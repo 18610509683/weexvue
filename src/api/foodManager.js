@@ -3,11 +3,11 @@
  */
 import request from '@/utils/request'
 
-let modelHeader = '/fridge'
+let modelHeader = '/admin'
 //食材列表
 export function fetchFoodList(data) {
   return request({
-    url: modelHeader+'/FoodManage/foodPageList',
+    url: modelHeader+'/FoodManage/index',
     method: 'post',
     data
   })
@@ -15,7 +15,7 @@ export function fetchFoodList(data) {
 //获取标签列表
 export function fetchAllTag(data) {
   return request({
-    url: modelHeader+'/FoodTags/getAllTag',
+    url: modelHeader+'/CookManage/getTagList',
     method: 'post',
     data
   })
@@ -25,7 +25,7 @@ export function fetchAllTag(data) {
 export function createFood(data,isEdit) {
   let url = ''
   if (isEdit) {
-    url = '/FoodManage/editFood'
+    url = '/FoodManage/update'
   } else {
     url = '/FoodManage/insertFood'
   }
@@ -70,7 +70,7 @@ export function fetchAllFood(data) {
 //获取食材详情
 export function fetchFoodDetail(data) {
   return request({
-    url: modelHeader+'/FoodManage/foodDetail',
+    url: modelHeader+'/FoodManage/detail',
     method: 'post',
     data
   })
@@ -80,7 +80,7 @@ export function fetchFoodDetail(data) {
 //获取所有食材分类
 export function fetchAllFoodType(data) {
   return request({
-    url: modelHeader+'/FoodType/getFoodType',
+    url: modelHeader+'/FoodManage/getFoodCategory',
     method: 'post',
     data
   })
@@ -206,7 +206,7 @@ export function updateRecipeTypeStatus(data) {
 //食材列表
 export function fetchRecipesList(data) {
   return request({
-    url: modelHeader+'/CookBook/getList',
+    url: modelHeader+'/CookManage/index',
     method: 'post',
     data
   })
@@ -216,9 +216,9 @@ export function fetchRecipesList(data) {
 export function createRecipe(data,isEdit) {
   let url = ''
   if (isEdit) {
-    url = '/CookBook/update'
+    url = '/CookManage/update'
   } else {
-    url = '/CookBook/insert'
+    url = '/CookManage/insert'
   }
   return request({
     url: modelHeader+url,
@@ -229,7 +229,7 @@ export function createRecipe(data,isEdit) {
 //食谱状态更新
 export function updateRecipeStatus(data) {
   return request({
-    url: modelHeader+'/CookBook/updateStatus',
+    url: modelHeader+'/CookManage/updateStatus',
     method: 'post',
     data
   })
@@ -237,7 +237,7 @@ export function updateRecipeStatus(data) {
 //食谱删除
 export function delRecipe(data) {
   return request({
-    url: modelHeader+'/CookBook/delete',
+    url: modelHeader+'/CookManage/delete',
     method: 'post',
     data
   })
@@ -253,7 +253,7 @@ export function delRecipe(data) {
 //获取食谱详情
 export function fetchRecipeDetail(data) {
   return request({
-    url: modelHeader+'/CookBook/detail',
+    url: modelHeader+'/CookManage/detail',
     method: 'post',
     data
   })

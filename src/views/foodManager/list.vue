@@ -1,326 +1,131 @@
 <!--
  * @Description: 垃圾信息管理页面
  -->
- 
+
 <template>
   <div class="app-container foodincome-con">
     <el-card class="box-card">
-      <div
-        slot="header"
-        class="clearfix"
-      >
+      <div slot="header" class="clearfix">
         <span>食材列表</span>
       </div>
       <div class="filter-container">
         <el-row>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
             <div class="filter-title">食材名称</div>
-            <el-input
-              class="filter-input"
-              size="small"
-              v-model="listQuery.name"
-              placeholder="食材名称"
-            ></el-input>
+            <el-input class="filter-input" size="small" v-model="listQuery.name" placeholder="食材名称"></el-input>
           </el-col>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
             <div class="filter-title">食材分类</div>
-            <el-select
-              class="filter-input"
-              size="small"
-              v-model="listQuery.type"
-              placeholder="食材分类"
-              clearable
-            >
-              <el-option
-                v-for="(item,index) in foodTypeOptions"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
+            <el-select class="filter-input" size="small" v-model="listQuery.categoryId" placeholder="食材分类" clearable>
+              <el-option v-for="(item,index) in foodCategoryOptions" :key="index" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-col>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
             <div class="filter-title">时令</div>
-            <el-select
-              class="filter-input"
-              size="small"
-              v-model="listQuery.season"
-              placeholder="时令"
-              clearable
-            >
-              <el-option
-                v-for="item in seasonOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
+            <el-select class="filter-input" size="small" v-model="listQuery.season" placeholder="时令" clearable>
+              <el-option v-for="item in seasonOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-col>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
             <div class="filter-title">节日</div>
-            <el-select
-              class="filter-input"
-              size="small"
-              v-model="listQuery.festival"
-              placeholder="节日"
-              clearable
-            >
-              <el-option
-                v-for="item in festivalOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
+            <el-select class="filter-input" size="small" v-model="listQuery.festival" placeholder="节日" clearable>
+              <el-option v-for="item in festivalOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-col>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
             <div class="filter-title">适宜人群</div>
-            <el-select
-              class="filter-input"
-              size="small"
-              v-model="listQuery.people"
-              placeholder="适宜人群"
-              clearable
-            >
-              <el-option
-                v-for="item in peopleOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
+            <el-select class="filter-input" size="small" v-model="listQuery.people" placeholder="适宜人群" clearable>
+              <el-option v-for="item in peopleOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-col>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
             <div class="filter-title">功效</div>
-            <el-input
-              class="filter-input"
-              size="small"
-              v-model="listQuery.function"
-              placeholder="功效"
-            ></el-input>
+            <el-select class="filter-input" size="small" v-model="listQuery.effect" placeholder="功效"
+                       clearable>
+              <el-option v-for="item in effectOptions" :key="item.id" :label="item.name"
+                         :value="item.id"></el-option>
+            </el-select>
           </el-col>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
             <div class="filter-title">适宜疾病</div>
-            <el-input
-              class="filter-input"
-              size="small"
-              v-model="listQuery.sick"
-              placeholder="适宜疾病"
-            ></el-input>
+            <el-select class="filter-input" size="small" v-model="listQuery.suitableSick" placeholder="适宜疾病"
+                       clearable>
+              <el-option v-for="item in sickOptions" :key="item.id" :label="item.name"
+                         :value="item.id"></el-option>
+            </el-select>
           </el-col>
-          <el-col
-            class="filter-item"
-            :xs="12"
-            :sm="8"
-            :lg="6"
-          >
-            <div class="filter-title">生理阶段</div>
-            <el-input
-              class="filter-input"
-              size="small"
-              v-model="listQuery.physiology"
-              placeholder="生理阶段"
-            ></el-input>
+          <el-col class="filter-item" :xs="12" :sm="8" :lg="6">
+            <div class="filter-title">适宜阶段</div>
+            <el-select class="filter-input" size="small" v-model="listQuery.suitablePhysiology" placeholder="适宜阶段"
+                       clearable>
+              <el-option v-for="item in physiologyOptions" :key="item.id" :label="item.name"
+                         :value="item.id"></el-option>
+            </el-select>
           </el-col>
-
-          <el-col
-            class="filter-item"
-            :xs="24"
-            :sm="12"
-            :lg="6"
-          >
-            <el-button
-              size="small"
-              type="primary"
-              icon="el-icon-search"
-              @click="handleFilter"
-            >查询</el-button>
-            <el-button
-              size="small"
-              style="margin-left: 10px;"
-              type="primary"
-              icon="el-icon-edit"
-              @click="toCreate()"
-            >新建食材</el-button>
+          <el-col class="filter-item" :xs="24" :sm="12" :lg="6">
+            <el-button size="small" type="primary" icon="el-icon-search" @click="handleFilter">查询</el-button>
+            <el-button size="small" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="toCreate()" >新建食材</el-button>
           </el-col>
           <el-col :span="8"></el-col>
         </el-row>
       </div>
 
-      <el-table
-        v-loading="listLoading"
-        :data="list"
-        @sort-change="sortChange"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%;"
-      >
-        <el-table-column
-          label="ID"
-          align="center"
-          prop="food_id"
-        ></el-table-column>
-        <el-table-column
-          label="食材名称"
-          align="center"
-          prop="name"
-        ></el-table-column>
-        <el-table-column
-          label="食材别名"
-          align="center"
-          prop="food_alias"
-        ></el-table-column>
-        <el-table-column
-          label="食材分类"
-          align="center"
-          prop="type_name"
-        ></el-table-column>
-        <el-table-column
-          label="来源"
-          align="center"
-        >
+      <el-table v-loading="listLoading" :data="list"  @sort-change="sortChange" border fit highlight-current-row style="width: 100%;">
+        <el-table-column label="ID" align="center" prop="id"></el-table-column>
+        <el-table-column label="食材名称" align="center" prop="name"></el-table-column>
+        <el-table-column label="食材别名" align="center" prop="aliasName"></el-table-column>
+        <el-table-column label="食材分类" align="center" prop="categoryName"></el-table-column>
+        <el-table-column label="来源" align="center">
           <template slot-scope="scope">
             <span>{{scope.row.source | sourceFilter}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="时令"
-          align="center"
-        >
+        <el-table-column label="时令" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.season.join(',') }}</span>
+            <span>{{scope.row.season}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="节日"
-          align="center"
-        >
+        <el-table-column label="节日" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.festival.join(',') }}</span>
+            <span>{{scope.row.festival}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="功效"
-          align="center"
-        >
+        <el-table-column label="功效" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.effect.join(',') }}</span>
+            <span>{{scope.row.effect}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="适宜人群"
-          align="center"
-        >
+        <el-table-column label="适宜人群" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.suitable_people_arr.join(',') }}</span>
+            <span>{{scope.row.suitablePeople}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="适宜阶段"
-          align="center"
-        >
+        <el-table-column label="适宜阶段" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.suitable_physiology.join(',') }}</span>
+            <span>{{scope.row.suitablePhysiology}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="适宜疾病"
-          align="center"
-        >
+        <el-table-column label="适宜疾病" align="center" :show-overflow-tooltip='true'>
           <template slot-scope="scope">
-            <span>{{scope.row.suitable_sick.join(',') }}</span>
+            <span>{{scope.row.suitableSick}}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="状态"
-          align="center"
-        >
+        <el-table-column label="状态" align="center">
           <template slot-scope="{row}">
             <el-tag :type="row.status | tagCssFilter">{{ row.status | statusFilter }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-          label="更新时间"
-          align="center"
-          prop="update_time"
-        ></el-table-column>
-        <el-table-column
-          label="操作"
-          align="center"
-          width="230"
-          class-name="small-padding fixed-width"
-        >
+        <el-table-column label="更新时间" align="center" prop="update_time"></el-table-column>
+        <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template slot-scope="{row}">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="toCreate(row.id)"
-            >编辑</el-button>
-            <el-button
-              v-if="row.status == 2"
-              type="success"
-              size="mini"
-              @click="changeStatus(row)"
-            >上架</el-button>
-            <el-button
-              v-else
-              type="info"
-              size="mini"
-              @click="changeStatus(row)"
-            >下架</el-button>
-            <el-button
-              v-if="row.status!='deleted'"
-              size="mini"
-              type="danger"
-              @click="handleDelete(row)"
-            >删除</el-button>
+            <el-button type="primary" size="mini" @click="toCreate(row.id)">编辑</el-button>
+            <el-button v-if="row.status !== 1" type="success" size="mini" @click="changeStatus(row)">上架</el-button>
+            <el-button v-else type="info" size="mini" @click="changeStatus(row)">下架</el-button>
+            <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.page_size"
-        @pagination="getList"
-      />
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.page_size" @pagination="getList" />
     </el-card>
   </div>
 </template>
@@ -342,10 +147,10 @@
 }
 </style>
 <style>
-.foodincome-con .el-card__body {
+.foodInCome-con .el-card__body {
   padding: 20px 40px;
 }
-.foodincome-con .p-dialog {
+.foodInCome-con .p-dialog {
   border-radius: 5px;
 }
 </style>
@@ -380,17 +185,12 @@ export default {
       return css[type];
     },
     sourceFilter(val) {
-      switch (val) {
-        case 1:
-          return "掌厨";
-          break;
-        case 2:
-          return "运营编辑";
-          break;
-
-        default:
-          return "";
-          break;
+      if (val === 1) {
+        return "IOT";
+      } else if (val === 2) {
+        return "掌厨";
+      } else {
+        return "运营编辑";
       }
     }
   },
@@ -401,20 +201,26 @@ export default {
       listLoading: true,
       listQuery: {
         name: null, //食材名称
-        type: null, //食材类型
+        categoryId: null, //食材分类id
         season: null, //时令
         festival: null, //节日
         function: null, //功效
         people: null, //适应人群
         sick: null, //疾病
         physiology: null, //生理阶段
+        effect: null, //功效
+        suitablePeople: null, //适应人群
+        suitableSick: null, //适宜疾病
+        suitablePhysiology: null, //适宜生理阶段
         page: 1,
         page_size: 20
       },
 
       timeRange: "",
-
-      foodTypeOptions: [],
+      effectOptions: [],
+      sickOptions: [],
+      foodCategoryOptions: [],
+      physiologyOptions: [],
       seasonOptions: [],
       festivalOptions: [],
       peopleOptions: [],
@@ -425,19 +231,24 @@ export default {
   watch: {},
   created() {
     fetchAllFoodType().then(res => {
-      this.foodTypeOptions = res.data;
+      this.foodCategoryOptions = res.data;
     });
-    //获取季节数据
+
     fetchAllTag({ type_id: 1 }).then(res => {
-      this.seasonOptions = res.data;
-    });
-    //获取节日数据
-    fetchAllTag({ type_id: 2 }).then(res => {
-      this.festivalOptions = res.data;
-    });
-    //获取适应人群数据
-    fetchAllTag({ type_id: 3 }).then(res => {
-      this.peopleOptions = res.data;
+      //获取时令季节数据
+      this.seasonOptions = res.data[1];
+      //获取节日数据
+      this.festivalOptions = res.data[2];
+      //获取适应人群数据
+      this.peopleOptions = res.data[3];
+      //获取设备品类数据
+      this.deviceOptions = res.data[10];
+      //获取功效数据
+      this.effectOptions = res.data[5];
+      //获取适宜疾病数据
+      this.sickOptions = res.data[6];
+      //获取生理阶段数据
+      this.physiologyOptions = res.data[4];
     });
     this.refreshList();
   },

@@ -19,13 +19,7 @@
             <el-form-item style="margin-bottom: 40px;" prop="name">
               <MDinput v-model="postForm.name" :maxlength="100" name="name">食材名称</MDinput>
             </el-form-item>
-            <el-form-item
-              style="margin-bottom: 40px;min-height: 148px;"
-              label-width="100px"
-              label="食材图片"
-              prop="image"
-              ref="uploadFormItem"
-            >
+            <el-form-item style="margin-bottom: 40px;min-height: 148px;" label-width="100px" label="食材图片" prop="image" ref="uploadFormItem">
               <el-upload
                 name="img_url"
                 :action="'https://fridge-api.mideav.com/admin' + '/rubbish/uploadImg'"
@@ -45,63 +39,36 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="100px"
-                    label="来源:"
-                    class="postInfo-container-item"
-                    prop="source"
-                  >
+                  <el-form-item label-width="100px" label="来源:" class="postInfo-container-item" prop="source" >
                     <el-select v-model="postForm.source" placeholder="请选择来源">
-                      <el-option
-                        v-for="(item,index) in sourceOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.value"
-                      />
+                      <el-option  v-for="(item,index) in sourceOptions" :key="index" :label="item.name" :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="100px"
-                    label="食材分类:"
-                    class="postInfo-container-item"
-                    prop="food_type"
-                  >
-                    <el-select v-model="postForm.food_type" placeholder="请选择食材分类">
-                      <el-option
-                        v-for="(item,index) in foodCGOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.id"
-                      />
+                  <el-form-item label-width="100px" label="食材分类:" class="postInfo-container-item" prop="categoryId">
+                    <el-select v-model="postForm.categoryId" placeholder="请选择食材分类">
+                      <el-option v-for="(item,index) in foodCGOptions" :key="index" :label="item.name" :value="item.id" />
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="100px"
-                    label="食材ID:"
-                    class="postInfo-container-item"
-                    prop="id"
-                    v-if="postForm.id"
-                  >
+                  <el-form-item label-width="100px" label="食材ID:" class="postInfo-container-item" prop="id" v-if="postForm.id">
                     <el-input placeholder="食材ID" v-model="postForm.id" :disabled="true"></el-input>
                   </el-form-item>
                 </el-col>
-
                 <el-col :span="12">
-                  <el-form-item label-width="100px" label="存储建议:" class="postInfo-container-item">
-                    <el-checkbox-group v-model="storeTypeCheckList">
-                      <el-checkbox label="refrig">冷藏室</el-checkbox>
-                      <el-input style="width:130px;margin-right:25px;" placeholder="请输入天数" v-model="refrigTime">
-                        <template slot="append">天</template>
-                      </el-input>
-                      <el-checkbox label="freeze">冷冻室</el-checkbox>
-                      <el-input style="width:130px;" placeholder="请输入天数" v-model="freezeTime">
-                        <template slot="append">天</template>
-                      </el-input>
-                    </el-checkbox-group>
+                  <el-form-item label-width="250px" label="冷藏室存储天数建议:" class="postInfo-container-item">
+                    <el-input placeholder="冷藏天数" v-model="postForm.coldStoreDay" >
+                      <template slot="append">天</template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label-width="250px" label="冷冻室存储天数建议:" class="postInfo-container-item">
+                    <el-input placeholder="冷冻天数" v-model="postForm.freezeStoreDay" >
+                      <template slot="append">天</template>
+                    </el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -111,7 +78,7 @@
 
         <el-form-item style="margin-bottom: 20px;" label-width="100px" label="食材别名:">
           <el-input
-            v-model="postForm.food_alias"
+            v-model="postForm.aliasName"
             :rows="1"
             type="textarea"
             class="article-textarea"
@@ -244,12 +211,7 @@
                   <slot name="label">
                     <div class="form-item-title">烹饪指南:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.cook_tips"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.cookTipsDesc"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -257,12 +219,7 @@
                   <slot name="label">
                     <div class="form-item-title">清洗与刀工:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.clean_knife"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.cleanKnifeDesc"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -270,12 +227,7 @@
                   <slot name="label">
                     <div class="form-item-title">选购要诀:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.buy_tips"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.buyTipsDesc" ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -283,12 +235,7 @@
                   <slot name="label">
                     <div class="form-item-title">保存方法:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.save_method"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.saveMethodDesc"></el-input>
                 </el-form-item>
               </el-col>
             </el-tab-pane>
@@ -298,12 +245,7 @@
                   <slot name="label">
                     <div class="form-item-title">营养成分:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.nutrition"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.nutritionDesc"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -311,7 +253,7 @@
                   <slot name="label">
                     <div class="form-item-title">养生功效:</div>
                   </slot>
-                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.health"></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.healthDesc"></el-input>
                 </el-form-item>
               </el-col>
             </el-tab-pane>
@@ -321,12 +263,7 @@
                   <slot name="label">
                     <div class="form-item-title">适宜人群:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.suitable_people"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.suitablePeopleDesc"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -334,12 +271,7 @@
                   <slot name="label">
                     <div class="form-item-title">适宜搭配:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.suitable_food"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.suitableFoodDesc"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -347,12 +279,7 @@
                   <slot name="label">
                     <div class="form-item-title">不宜人群:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.improper_people"
-                  ></el-input>
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.improperPeopleDesc"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -360,11 +287,8 @@
                   <slot name="label">
                     <div class="form-item-title">禁忌搭配:</div>
                   </slot>
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="postForm.improper_food"
+                  <el-input type="textarea" :rows="3" placeholder="请输入内容"
+                    v-model="postForm.improperFoodDesc"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -459,7 +383,7 @@
     >
       <el-form
         ref="colloctForm"
-        :rules="colloctRules"
+        :rules="subRules"
         :model="colloctTemp"
         label-position="left"
         label-width="100px"
@@ -511,32 +435,36 @@ const defaultForm = {
   id: null, //食材id
   name: "", //食材名称
   image: null, //食材图片
-  food_type: null, //食材分类
+  categoryId: null, //食材分类
   source: null, //食材来源（1 掌厨 2 运营编辑）
 
-  store_advice: "", //存储建议
-  food_alias: "", //食材别名
-  cook_tips: "", //烹饪指南
-  clean_knife: "", //清洁与刀工
-  buy_tips: "", //购买技巧
-  save_method: "", //保存方法
-  nutrition: "", //营养成分
-  health: "", //养生功效
-  suitable_people: "", //适应人群
-  improper_people: "", //不宜人群
-  suitable_food: "", //饮食适应搭配
-  improper_food: "", //饮食不宜搭配
+  aliasName: "", //食材别名
+  cookTipsDesc: "", //烹饪指南
+  cleanKnifeDesc: "", //清洁与刀工
+  buyTipsDesc: "", //购买技巧
+  saveMethodDesc: "", //保存方法
+  nutritionDesc: "", //营养成分
+  healthDesc: "", //养生功效
+  suitablePeopleDesc: "",//适宜人群
+  improperPeopleDesc: "",//禁忌人群
+  suitableFoodDesc: "", // 适宜搭配
+  improperFoodDesc: "", // 禁忌搭配
+  suitablePeople: "", //适应人群
+  improperPeople: "", //不宜人群
+  suitableFood: "", //饮食适应搭配
+  improperFood: "", //饮食不宜搭配
   suitable: "", //食材适应搭配（JSON字符串）
   improper: "", //食材不宜搭配 （JSON字符串）
-
+  freezeStoreDay: "", //冷藏室建议存储天数
+  coldStoreDay: "", //冷冻室建议存储天数
   season: null,
   festival: null,
-  suitable_people_arr: null,
-  improper_people_arr: null,
-  suitable_physiology: null,
-  improper_physiology: null,
-  suitable_sick: null,
-  improper_sick: null,
+  suitablePeopleArr: null, //适宜人群
+  improperPeopleArr: null,//禁忌人群
+  suitablePhysiology: null,
+  improperPhysiology: null,
+  suitableSick: null,
+  improperSick: null,
   effect: null
 };
 
@@ -560,7 +488,7 @@ export default {
         source: [
           { required: true, message: "请选择食材来源", trigger: "change" }
         ],
-        food_type: [
+        categoryId: [
           { required: true, message: "请选择食材分类", trigger: "change" }
         ],
         image: [{ required: true, message: "请上传食材图片" }]
@@ -583,7 +511,7 @@ export default {
         update: "编辑",
         create: "新增"
       },
-      colloctRules: {
+      subRules: {
         name: [{ required: true, message: "请选择食材", trigger: "change" }],
         id: [{ required: true, message: "食材ID", trigger: "blur" }],
         function: [{ required: true, message: "请输入功效", trigger: "blur" }]
@@ -597,19 +525,12 @@ export default {
       uploadImgList: [],
 
       sourceOptions: [
-        {
-          name: "掌厨",
-          value: 1
-        },
-        {
-          name: "运营编辑",
-          value: 2
-        }
+        { value: 1, name: 'IOT' }, { value: 2, name: '掌厨' }, { value: 3, name: '运营编辑' }
       ],
       foodCGOptions: [], //食品分类
 
-      goodCollocts: [],
-      badCollocts: [],
+      goodCollocts: [], //食材适宜单配
+      badCollocts: [], //食材禁忌搭配
       seasonArr: [],
       festivalArr: [],
       goodPeopleArr: [],
@@ -643,29 +564,28 @@ export default {
     }
   },
   created() {
-    //获取季节数据
-    fetchAllTag({ type_id: 1 }).then(res => {
-      this.seasonOptions = res.data;
-    });
-    //获取节日数据
-    fetchAllTag({ type_id: 2 }).then(res => {
-      this.festivalOptions = res.data;
-    });
-    //获取适应人群数据
-    fetchAllTag({ type_id: 3 }).then(res => {
-      this.peopleOptions = res.data;
-    });
-    //获取适应人群数据
-    fetchAllTag({ type_id: 4 }).then(res => {
-      this.physiologyOptions = res.data;
-    });
-    //获取适应人群数据
-    fetchAllTag({ type_id: 6 }).then(res => {
-      this.sickOptions = res.data;
-    });
-    //获取适应人群数据
-    fetchAllTag({ type_id: 5 }).then(res => {
-      this.functionOptions = res.data;
+    //获得标签数据
+    fetchAllTag().then(res => {
+      //获取时令季节数据
+      this.seasonOptions = res.data[1];
+      //获取节日数据
+      this.festivalOptions = res.data[2];
+      //获取适应人群数据
+      this.peopleOptions = res.data[3];
+      //获取生理阶段数据
+      this.physiologyOptions = res.data[4];
+      //获取功效数据
+      this.functionOptions = res.data[5];
+      //获取适宜疾病数据
+      this.sickOptions = res.data[6];
+      //获取口味数据
+      this.tasteOptions = res.data[7];
+      //获取菜系数据
+      this.dishStyleOptions = res.data[8];
+      //获取菜式数据
+      this.cookStyleOptions = res.data[9];
+      //获取设备品类数据
+      this.deviceOptions = res.data[10];
     });
 
     //获取所有食品分类
@@ -680,44 +600,38 @@ export default {
         Object.keys(this.postForm).forEach(key => {
           this.postForm[key] = data[key];
         });
-        
-        this.storeTypeCheckList = []
-        for (let index = 0; index < this.postForm.store_advice.length; index++) {
-          const el = this.postForm.store_advice[index];
-          let key = Object.keys(this.postForm.store_advice[index])[0]
-          if (key == 'refrig') {
-            this.refrigTime = el.refrig
-          }else if(key == 'freeze'){
-            this.freezeTime = el.freeze
-          }
-          this.storeTypeCheckList.push(key)
-        }
 
         //tags反赋值
         this.seasonArr = this.postForm.season;
         this.festivalArr = this.postForm.festival;
-        this.goodPeopleArr = this.postForm.suitable_people_arr;
-        this.badPeopleArr = this.postForm.improper_people_arr;
-        this.goodPhysioArr = this.postForm.suitable_physiology;
-        this.badPhysioArr = this.postForm.improper_physiology;
-        this.goodSickArr = this.postForm.suitable_sick;
-        this.badSickArr = this.postForm.improper_sick;
+        this.goodPeopleArr = this.postForm.suitablePeople;
+        this.badPeopleArr = this.postForm.improperPeople;
+        this.goodPhysioArr = this.postForm.suitablePhysiology;
+        this.badPhysioArr = this.postForm.improperPhysiology;
+        this.goodSickArr = this.postForm.suitableSick.concat();
+        this.badSickArr = this.postForm.improperSick;
         this.functionArr = this.postForm.effect;
 
-        if (this.postForm.suitable) {
-          this.goodCollocts = this.postForm.suitable
-        }
-        
-        if (this.postForm.improper) {
-          this.badCollocts = this.postForm.improper
-        }
-        
+        //搭配食材
+        this.goodCollocts = this.postForm.suitableFood.concat()
+        //禁忌食材
+        this.badCollocts = this.postForm.improperFood.concat()
+        //搭配食材
+        // if (this.postForm.suitableFood) {
+        //   this.goodCollocts = this.postForm.suitableFood.concat()
+        // }
+
+        //禁忌食材
+        // if (this.postForm.improperFood) {
+        //   this.badCollocts = this.postForm.improperFood.concat()
+        // }
 
         if (this.postForm.image && this.postForm.image.length > 0) {
           this.uploadImgList = [{ url: this.postForm.image }];
         } else {
           this.uploadImgList = [];
         }
+        // console.log(this.postForm)
       });
     } else {
       this.postForm = Object.assign({}, defaultForm);
@@ -757,89 +671,106 @@ export default {
     submitForm() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
-          let store_advice = []
-          for (let index = 0; index < this.storeTypeCheckList.length; index++) {
-            const el = this.storeTypeCheckList[index];
-            if (el == 'refrig') {
-              store_advice.push({refrig:this.refrigTime})
-            }else if(el == 'freeze'){
-              store_advice.push({freeze:this.freezeTime})
-            }
-          }
+          // let store_advice = []
+          // for (let index = 0; index < this.storeTypeCheckList.length; index++) {
+          //   const el = this.storeTypeCheckList[index];
+          //   if (el == 'refrig') {
+          //     store_advice.push({refrig:this.refrigTime})
+          //   }else if(el == 'freeze'){
+          //     store_advice.push({freeze:this.freezeTime})
+          //   }
+          // }
 
-          this.postForm.store_advice = store_advice
+          // this.postForm.store_advice = store_advice
           // this.postForm.store_advice = [{ [this.storeType]: this.storeTime }]; 变量当key
-          
+          // console.log(this.postForm)
           //tags赋值
+
           if (this.isEdit) {
-            if (this.postForm.season&&(this.postForm.season == this.seasonArr)) {
+            if (this.postForm.season && (this.postForm.season == this.seasonArr)) {
               this.postForm.season = ''
             }else{
               this.postForm.season = this.seasonArr;
             }
 
-            if (this.postForm.festival&&(this.postForm.festival == this.festivalArr)) {
+            if (this.postForm.festival && (this.postForm.festival == this.festivalArr)) {
               this.postForm.festival = ''
             }else{
               this.postForm.festival = this.festivalArr;
             }
-
-            if (this.postForm.suitable_people_arr&&(this.postForm.suitable_people_arr == this.goodPeopleArr)) {
-              this.postForm.suitable_people_arr = ''
+            // debugger
+            // console.log(this.postForm.suitablePeople)
+            // console.log(this.goodPeopleArr)
+            if (this.postForm.suitablePeople && (this.postForm.suitablePeople == this.goodPeopleArr)) {
+              this.postForm.suitablePeople = ''
+              // debugger
             }else{
-              this.postForm.suitable_people_arr = this.goodPeopleArr;
+              this.postForm.suitablePeople = this.goodPeopleArr;
             }
 
-            if (this.postForm.improper_people_arr&&(this.postForm.improper_people_arr == this.badPeopleArr)) {
-              this.postForm.improper_people_arr = ''
+            if (this.postForm.improperPeople && (this.postForm.improperPeople == this.badPeopleArr)) {
+              this.postForm.improperPeople = ''
             }else{
-              this.postForm.improper_people_arr = this.badPeopleArr;
+              this.postForm.improperPeople = this.badPeopleArr;
             }
 
-            if (this.postForm.suitable_physiology&&(this.postForm.suitable_physiology == this.goodPhysioArr)) {
-              this.postForm.suitable_physiology = ''
+            if (this.postForm.suitablePhysiology && (this.postForm.suitablePhysiology == this.goodPhysioArr)) {
+              this.postForm.suitablePhysiology = ''
             }else{
-              this.postForm.suitable_physiology = this.goodPhysioArr;
+              this.postForm.suitablePhysiology = this.goodPhysioArr;
             }
 
-            if (this.postForm.improper_physiology&&(this.postForm.improper_physiology == this.badPhysioArr)) {
-              this.postForm.improper_physiology = ''
+            if (this.postForm.improperPhysiology && (this.postForm.improperPhysiology == this.badPhysioArr)) {
+              this.postForm.improperPhysiology = ''
             }else{
-              this.postForm.improper_physiology = this.badPhysioArr;
+              this.postForm.improperPhysiology = this.badPhysioArr;
             }
 
-            if (this.postForm.suitable_sick&&(this.postForm.suitable_sick == this.goodSickArr)) {
-              this.postForm.suitable_sick = ''
+            if (this.postForm.suitableSick && (this.postForm.suitableSick == this.goodSickArr)) {
+              this.postForm.suitableSick = ''
             }else{
-              this.postForm.suitable_sick = this.goodSickArr;
+              this.postForm.suitableSick = this.goodSickArr;
             }
 
-            if (this.postForm.improper_sick&&(this.postForm.improper_sick == this.badSickArr)) {
-              this.postForm.improper_sick = ''
+            if (this.postForm.improperSick && (this.postForm.improperSick == this.badSickArr)) {
+              this.postForm.improperSick = ''
             }else{
-              this.postForm.improper_sick = this.badSickArr;
+              this.postForm.improperSick = this.badSickArr;
             }
 
-            if (this.postForm.effect&&(this.postForm.effect == this.functionArr)) {
+            if (this.postForm.effect && (this.postForm.effect == this.functionArr)) {
               this.postForm.effect = ''
             }else{
               this.postForm.effect = this.functionArr;
             }
 
+
+            //食材搭配
+            if (this.postForm.suitableFood && (this.postForm.suitableFood == this.goodCollocts)) {
+              this.postForm.suitableFood = ''
+            }else{
+              this.postForm.suitableFood = this.goodCollocts;
+            }
+            //禁忌搭配
+            if (this.postForm.improperFood && (this.postForm.suitableFood == this.badCollocts)) {
+              this.postForm.improperFood = ''
+            }else{
+              this.postForm.improperFood = this.badCollocts;
+            }
           }else{
             this.postForm.season = this.seasonArr;
             this.postForm.festival = this.festivalArr;
-            this.postForm.suitable_people_arr = this.goodPeopleArr;
-            this.postForm.improper_people_arr = this.badPeopleArr;
-            this.postForm.suitable_physiology = this.goodPhysioArr;
-            this.postForm.improper_physiology = this.badPhysioArr;
-            this.postForm.suitable_sick = this.goodSickArr;
-            this.postForm.improper_sick = this.badSickArr;
+            this.postForm.suitablePeopleArr = this.goodPeopleArr;
+            this.postForm.suitablePeopleArr = this.badPeopleArr;
+            this.postForm.suitablePhysiology = this.goodPhysioArr;
+            this.postForm.improperPhysiology = this.badPhysioArr;
+            this.postForm.suitableSick = this.goodSickArr;
+            this.postForm.improperSick = this.badSickArr;
             this.postForm.effect = this.functionArr;
-          }
 
-          this.postForm.suitable = this.goodCollocts;
-          this.postForm.improper = this.badCollocts;
+            this.postForm.suitableFood = this.goodCollocts;
+            this.postForm.improperFood = this.badCollocts;
+          }
 
           createFood(this.postForm,this.isEdit).then(res => {
             this.$router.go(-1); //返回上一层
@@ -874,12 +805,13 @@ export default {
      * @description: 上传成功
      */
     uploadImgSuccess(response, file, fileList) {
-      console.log(response);
-      if (fileList.length > 0) {
+      if (fileList.length > 0 && response.code==200) {
         this.postForm.image = response.data.all_img_url;
         //移除必填的提醒
         this.$refs["uploadFormItem"].clearValidate();
       } else {
+        this.$message('上传失败');
+        this.uploadImgList = [];
         this.postForm.image = "";
       }
     },
@@ -934,16 +866,25 @@ export default {
       this.$refs["colloctForm"].validate(valid => {
         if (valid) {
           let tempData = Object.assign({}, this.colloctTemp);
+          console.log(tempData)
           if (this.isGood) {
             this.goodCollocts.push(tempData);
           } else {
             this.badCollocts.push(tempData);
           }
+
+          console.log('xx')
+          console.log(this.postForm.suitableFood)
+          console.log(this.goodCollocts)
+          console.log('xx')
           this.dialogCollectVisible = false;
           this.$message({
             type: "success",
             message: "已成功创建!"
           });
+          // console.log(1);
+          // console.log(this.goodCollocts);
+          // console.log(2);
         }
       });
     },
@@ -956,11 +897,17 @@ export default {
           } else {
             this.badCollocts.splice(this.collectIndex, 1, tempData);
           }
+          console.log('yy')
+          console.log(this.postForm.suitableFood)
+          console.log(this.goodCollocts)
+          console.log('yy')
           this.dialogCollectVisible = false;
           this.$message({
             type: "success",
             message: "更新成功!"
           });
+          // console.log(this.goodCollocts);
+
         }
       });
     },
@@ -995,6 +942,10 @@ export default {
         type: "warning"
       })
         .then(() => {
+          console.log('x')
+          console.log(this.postForm.suitableFood)
+          console.log(this.goodCollocts)
+          console.log('x')
           let list = null;
           if (this.isGood) {
             list = this.goodCollocts;

@@ -1,12 +1,6 @@
 <template>
   <div class="createPost-container">
-    <el-form
-      ref="postForm"
-      :model="postForm"
-      :rules="rules"
-      class="form-container"
-      label-position="left"
-    >
+    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container" label-position="left">
       <sticky :z-index="10" :class-name="'sub-navbar '+pageStatus">
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="goback">取消</el-button>
         <el-button v-loading="loading" type="warning" @click="submitForm">保存</el-button>
@@ -19,24 +13,18 @@
             <el-form-item style="margin-bottom: 40px;" prop="name">
               <MDinput v-model="postForm.name" :maxlength="100" name="name">食谱名称</MDinput>
             </el-form-item>
-            <el-form-item
-              style="margin-bottom: 40px;min-height: 148px;"
-              label-width="100px"
-              label="食谱封面图"
-              prop="image"
-              ref="uploadFormItem"
-            >
-              <el-upload
-                name="img_url"
-                :action="'https://fridge-api.mideav.com/admin' + '/rubbish/uploadImg'"
-                :file-list="uploadImgList"
-                :on-preview="handleUploadImgPreview"
-                :on-remove="uploadImgRemove"
-                :on-success="uploadImgSuccess"
-                :on-exceed="uploadExceed"
-                :data="uploadParam"
-                :limit="1"
-                list-type="picture-card"
+            <el-form-item style="margin-bottom: 40px;min-height: 148px;" label-width="100px" label="食谱封面图" prop="image"
+                          ref="uploadFormItem">
+              <el-upload name="img_url"
+                         :action="'https://fridge-api.mideav.com/admin' + '/rubbish/uploadImg'"
+                         :file-list="uploadImgList"
+                         :on-preview="handleUploadImgPreview"
+                         :on-remove="uploadImgRemove"
+                         :on-success="uploadImgSuccess"
+                         :on-exceed="uploadExceed"
+                         :data="uploadParam"
+                         :limit="1"
+                         list-type="picture-card"
               >
                 <i class="el-icon-plus"></i>
               </el-upload>
@@ -45,19 +33,10 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="来源:"
-                    class="postInfo-container-item"
-                    prop="source"
-                  >
+                  <el-form-item label-width="120px" label="来源:" class="postInfo-container-item" prop="source">
                     <el-select v-model="postForm.source" placeholder="请选择来源">
-                      <el-option
-                        v-for="(item,index) in sourceOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.value"
-                      />
+                      <el-option v-for="(item,index) in sourceOptions" :key="index" :label="item.name"
+                                 :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -79,88 +58,60 @@
                   </el-form-item>
                 </el-col> -->
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="适宜份数:"
-                    class="postInfo-container-item"
-                  >
+                  <el-form-item label-width="120px" label="适宜份数:" class="postInfo-container-item">
                     <el-input placeholder="请输入份数" v-model="postForm.unit"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label-width="120px" label="烹饪难度:" class="postInfo-container-item" prop="source">
+                    <el-select v-model="postForm.difficultyLevel" placeholder="请选择烹饪难度">
+                      <el-option v-for="(item,index) in difficultyOptions" :key="index" :label="item.name"
+                                 :value="item.value" />
+                    </el-select>
                   </el-form-item>
                 </el-col>
               </el-row>
 
               <el-row>
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="食材ID:"
-                    class="postInfo-container-item"
-                    prop="id"
-                  >
+                  <el-form-item label-width="120px" label="食材ID:" class="postInfo-container-item" prop="id">
                     <el-input placeholder="食谱ID" v-model="postForm.id" :disabled="true"></el-input>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="IOT食谱ID:"
-                    class="postInfo-container-item"
-                  >
-                    <el-input placeholder="请输入内容" v-model="postForm.third_id" :disabled="true"></el-input>
+                  <el-form-item label-width="120px" label="IOT食谱ID:" class="postInfo-container-item">
+                    <el-input placeholder="请输入内容" v-model="postForm.thirdId" :disabled="true"></el-input>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="IOT食谱编码:"
-                    class="postInfo-container-item"
-                  >
-                    <el-input placeholder="请输入内容" v-model="postForm.third_no" :disabled="true"></el-input>
+                  <el-form-item label-width="120px" label="IOT食谱编码:" class="postInfo-container-item">
+                    <el-input placeholder="请输入内容" v-model="postForm.thirdNo" :disabled="true"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
 
               <el-row>
-                <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="烹饪难度:"
-                    class="postInfo-container-item"
-                    prop="source"
-                  >
-                    <el-select v-model="postForm.difficulty" placeholder="请选择烹饪难度">
-                      <el-option
-                        v-for="(item,index) in difficultyOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.value"
-                      />
+                <el-col :span="6">
+                  <el-form-item label-width="100px" label="烹饪天数:" class="postInfo-container-item" prop="source">
+                    <el-select v-model="postForm.days" placeholder="请选择烹饪天数">
+                      <el-option v-for="(item,index) in daySelect" :key="index" :label="item.name"
+                                 :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="烹饪时间:"
-                    class="postInfo-container-item"
-                  >
-                    <el-time-picker
-                      v-model="makeTime"
-                      :picker-options="{selectableRange: '00:00:00 - 4:00:00'}"
-                      format="HH时mm分ss秒"
-                      value-format="HH-mm-ss">
-                    </el-time-picker>
+                  <el-form-item label-width="100px" label="烹饪时分秒:" class="postInfo-container-item">
+                    <el-time-picker v-model="makeTime"
+                                    format="HH时mm分ss秒"
+                                    value-format="HH-mm-ss"></el-time-picker>
                   </el-form-item>
                 </el-col>
+
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="热量:"
-                    class="postInfo-container-item"
-                  >
-                    <el-input placeholder="请输入热量" v-model="postForm.heat">
+                  <el-form-item label-width="120px" label="热量:" class="postInfo-container-item">
+                    <el-input placeholder="请输入热量" v-model="postForm.calories">
                       <template slot="append">千卡</template>
                     </el-input>
                   </el-form-item>
@@ -169,29 +120,16 @@
 
               <el-row>
                 <el-col :span="8">
-                  <el-form-item
-                    label-width="120px"
-                    label="视频食谱:"
-                    class="postInfo-container-item"
-                    prop="source"
-                  >
-                    <el-select v-model="postForm.has_video" placeholder="是否是视频食谱">
-                      <el-option
-                        v-for="(item,index) in hasVideoOptions"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.value"
-                      />
+                  <el-form-item label-width="120px" label="视频食谱:" class="postInfo-container-item" prop="source">
+                    <el-select v-model="postForm.isHasVideo" placeholder="是否是视频食谱">
+                      <el-option v-for="(item,index) in hasVideoOptions" :key="index" :label="item.name"
+                                 :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="16">
-                  <el-form-item
-                    label-width="120px"
-                    label="视频地址:"
-                    class="postInfo-container-item"
-                  >
-                    <el-input style="width: 600px;" v-model="postForm.video_url" :disabled="true"></el-input>
+                  <el-form-item label-width="120px" label="视频地址:" class="postInfo-container-item">
+                    <el-input style="width: 600px;" v-model="postForm.videoUrl" :disabled="true"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -201,12 +139,7 @@
                     <slot name="label">
                       <div class="form-item-title">食谱简介:</div>
                     </slot>
-                    <el-input
-                      type="textarea"
-                      :rows="3"
-                      placeholder="请输入内容"
-                      v-model="postForm.introduce"
-                    ></el-input>
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.introduce"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -214,12 +147,7 @@
                     <slot name="label">
                       <div class="form-item-title">食谱描述:</div>
                     </slot>
-                    <el-input
-                      type="textarea"
-                      :rows="3"
-                      placeholder="请输入内容"
-                      v-model="postForm.desc"
-                    ></el-input>
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.desc"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -233,173 +161,114 @@
           <el-col :span="12">
             <el-form-item label-width="120px" label="设备品类:">
               <el-select v-model="deviceArr" multiple filterable placeholder="请选择设备品类">
-                <el-option
-                  v-for="(item,index) in deviceOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in deviceOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="口味:">
               <el-select v-model="tasteArr" multiple filterable placeholder="请选择口味">
-                <el-option
-                  v-for="(item,index) in tasteOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in tasteOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="时令:">
               <el-select v-model="seasonArr" multiple filterable placeholder="请选择时令">
-                <el-option
-                  v-for="(item,index) in seasonOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in seasonOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="节日:">
               <el-select v-model="festivalArr" multiple filterable placeholder="请选择节日">
-                <el-option
-                  v-for="(item,index) in festivalOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in festivalOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="菜系:">
               <el-select v-model="dishStyleArr" multiple filterable placeholder="请选择菜系">
-                <el-option
-                  v-for="(item,index) in dishStyleOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in dishStyleOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="菜式:">
               <el-select v-model="cookStyleArr" multiple filterable placeholder="请选择菜式">
-                <el-option
-                  v-for="(item,index) in cookStyleOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in cookStyleOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-
-
           <el-col :span="12">
             <el-form-item label-width="120px" label="适宜人群:">
               <el-select v-model="goodPeopleArr" multiple filterable placeholder="请选择适宜人群">
-                <el-option
-                  v-for="(item,index) in peopleOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in peopleOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="禁忌人群:">
               <el-select v-model="badPeopleArr" multiple filterable placeholder="请选择禁忌人群">
-                <el-option
-                  v-for="(item,index) in peopleOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in peopleOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="适宜生理阶段:">
               <el-select v-model="goodPhysioArr" multiple filterable placeholder="请选择适宜生理阶段">
-                <el-option
-                  v-for="(item,index) in physiologyOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in physiologyOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="禁忌生理阶段:">
               <el-select v-model="badPhysioArr" multiple filterable placeholder="请选择禁忌生理阶段">
-                <el-option
-                  v-for="(item,index) in physiologyOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in physiologyOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="适宜疾病:">
               <el-select v-model="goodSickArr" multiple filterable placeholder="请选择适宜疾病">
-                <el-option
-                  v-for="(item,index) in sickOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in sickOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label-width="120px" label="禁忌疾病:">
               <el-select v-model="badSickArr" multiple filterable placeholder="禁忌疾病">
-                <el-option
-                  v-for="(item,index) in sickOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in sickOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label-width="120px" label="功效:">
               <el-select v-model="functionArr" multiple filterable placeholder="请选择功效">
-                <el-option
-                  v-for="(item,index) in functionOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="(item,index) in functionOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label-width="120px" label="分类:">
-              <el-select v-model="recipesCGArr" multiple filterable placeholder="请选择分类">
-                <el-option
-                  v-for="(item,index) in recipesCGOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+          <!--          <el-col :span="24">-->
+          <!--            <el-form-item label-width="120px" label="分类:">-->
+          <!--              <el-select v-model="recipesCGArr" multiple filterable placeholder="请选择分类">-->
+          <!--                <el-option v-for="(item,index) in recipesCGOptions" :key="index" :label="item.name" :value="item.id"></el-option>-->
+          <!--              </el-select>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
         </el-row>
       </div>
       <div class="divider">食谱详情</div>
@@ -408,7 +277,6 @@
           <el-tabs v-model="baikeActiveVal" @tab-click="handleTabClick">
             <el-tab-pane label="食谱制作" name="baike1">
               <el-col :span="24">
-                
                 <div class="step-cell" v-for="(item,index) in tempSteps" :key="index">
                   <div class="step-cell-hd">步骤{{index+1}}</div>
                   <div class="cell-img-con">
@@ -418,7 +286,7 @@
                       list-type="picture-card"
                       name="img_url"
                       :action="'https://fridge-api.mideav.com/admin' + '/rubbish/uploadImg'"
-                      :file-list="item.stepimage?[{url:item.stepimage}]:[]"
+                      :file-list="item.stepImage?[{url:item.stepImage}]:[]"
                       :on-preview="handleUploadImgPreview"
                       :on-remove="(file, fileList) => uploadStepImgRemove(file, fileList, index)"
                       :on-success="(response, file, fileList) => uploadStepImgSuccess(response, file, fileList, index)"
@@ -431,24 +299,15 @@
                     </el-upload>
                   </div>
                   <div class="step-cell-text">
-                    <el-input
-                      type="textarea"
-                      :rows="3"
-                      placeholder="请输入内容"
-                      v-model="item.stepdesc"
-                    ></el-input>
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="item.stepDesc"></el-input>
                   </div>
                   <div class="step-cell-ft">
-                    <img @click="delStep(index)" src="@/assets/del.png" >
+                    <img @click="delStep(index)" src="@/assets/del.png">
                   </div>
                 </div>
-                <el-button
-                  class="colloct-add"
-                  style="margin-top:10px;"
-                  type="primary"
-                  size="mini"
-                  @click="handleCreateStep()"
-                >新增</el-button>
+                <el-button class="colloct-add" style="margin-top:10px;" type="primary" size="mini"
+                           @click="handleCreateStep()">新增
+                </el-button>
               </el-col>
             </el-tab-pane>
             <el-tab-pane label="食谱材料" name="baike2">
@@ -456,13 +315,14 @@
                 主料：
               </el-col>
               <el-col :span="6" v-for="item in mainMaterial" :key="item.id" style="margin-top:12px;">
-                {{item.materialname}}&#12288;&#12288;{{item.materialweight}}
+                {{item.name}}&#12288;&#12288;{{item.weight}}
               </el-col>
-              <el-col v-if="subMaterial.length>0" :span="24" style="border-top: 1px solid #d2d2d2;margin-top: 12px;padding-top: 12px;">
+              <el-col v-if="subMaterial.length>0" :span="24"
+                      style="border-top: 1px solid #d2d2d2;margin-top: 12px;padding-top: 12px;">
                 辅料：
               </el-col>
               <el-col :span="6" v-for="item in subMaterial" :key="item.id" style="margin-top:12px;">
-                {{item.materialname}}&#12288;&#12288;{{item.materialweight}}
+                {{item.name}}&#12288;&#12288;{{item.weight}}
               </el-col>
 
             </el-tab-pane>
@@ -482,667 +342,658 @@
 </template>
 
 <script>
-import {
-  createRecipe,
-  fetchRecipeDetail,
-  fetchAllTag,
-  fetchAllRecipesType
-} from "@/api/foodManager.js";
-import MDinput from "@/components/MDinput";
-import Sticky from "@/components/Sticky"; // 粘性header组件
-import { validURL } from "@/utils/validate";
-// import { fetchArticle } from '@/api/article'
-// import { searchUser } from '@/api/remote-search'
-import { getToken } from "@/utils/auth";
+  import {
+    createRecipe,
+    fetchRecipeDetail,
+    fetchAllTag,
+    fetchAllRecipesType
+  } from "@/api/foodManager.js";
+  import MDinput from "@/components/MDinput";
+  import Sticky from "@/components/Sticky"; // 粘性header组件
+  import { validURL } from "@/utils/validate";
+  // import { fetchArticle } from '@/api/article'
+  // import { searchUser } from '@/api/remote-search'
+  import { getToken } from "@/utils/auth";
 
-const defaultForm = {
-  id: null, //食材id
-  name: "", //食材名称
-  image: null, //食材图片
-  unit: null, //份数
-  third_id: null, //第三方id
-  third_no: null, //第三方食谱编码
-  difficulty: null, //烹饪难度
-  source: null, //来源
-  has_video: null, //是否有视频
-  video_url: null, //视频地址
-  introduce: null, //简介
-  desc: null, //描述
-  cook_duration: null, //时长
-  heat: null, //热量
+  const defaultForm = {
+    id: null, //食材id
+    name: "", //食材名称
+    image: null, //食材图片
+    unit: null, //份数
+    thirdId: null, //第三方id
+    thirdNo: null, //第三方食谱编码
+    difficultyLevel: null, //烹饪难度
+    source: null, //来源
+    isHasVideo: null, //是否有视频
+    videoUrl: null, //视频地址
+    introduce: null, //简介
+    desc: null, //描述
+    cook_duration: null, //时长
+    calories: null, //热量
 
-  device: null, //设备
-  season: null, //时令
-  festival: null, //节日
-  dish_style: null, //菜系
-  suitable_people: null, //适宜人群
-  improper_people: null, //禁忌人群
-  suitable_physiology: null, //生理阶段
-  improper_physiology: null,
-  suitable_sick: null, //疾病
-  improper_sick: null,
-  effect: null,  //功效
-  category: null, //分类
-  taste: null, //口味
-  cook_style: null, //菜式
+    device: null, //设备
+    season: null, //时令
+    festival: null, //节日
+    dishStyle: null, //菜系
+    suitablePeople: null, //适宜人群
+    improperPeople: null, //禁忌人群
+    suitablePhysiology: null, //生理阶段
+    improperPhysiology: null,
+    suitableSick: null, //疾病
+    improperSick: null,
+    effect: null,  //功效
+    category: null, //分类
+    taste: null, //口味
+    cookStyle: null, //菜式
 
-  step: null, //烹饪步骤
-  material: [], //	烹饪材料
+    step: null, //烹饪步骤
+    material: [], //	烹饪材料
 
-  suitable: "", //食材适应搭配（JSON字符串）
-  improper: "", //食材不宜搭配 （JSON字符串）
+    suitable: "", //食材适应搭配（JSON字符串）
+    improper: "", //食材不宜搭配 （JSON字符串）
 
-  minute: null,
-  second: null
-};
+    days: 0,
+    hours: null,
+    minutes: null,
+    seconds: null
+  };
 
-export default {
-  name: "FoodDetail",
-  components: { MDinput, Sticky },
-  props: {
-    isEdit: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      pageStatus: "draft",
-      postForm: Object.assign({}, defaultForm),
-      loading: false,
-      rules: {
-        name: [{ required: true, message: "请输入食材名称", trigger: "blur" }],
-        id: [{ required: true, message: "食材ID", trigger: "blur" }],
-        source: [
-          { required: true, message: "请选择食材来源", trigger: "change" }
+  export default {
+    name: "FoodDetail",
+    components: { MDinput, Sticky },
+    props: {
+      isEdit: {
+        type: Boolean,
+        default: false
+      }
+    },
+    data () {
+      return {
+        pageStatus: "draft",
+        postForm: Object.assign({}, defaultForm),
+        loading: false,
+        rules: {
+          name: [{ required: true, message: "请输入食材名称", trigger: "blur" }],
+          id: [{ required: true, message: "食材ID", trigger: "blur" }],
+          source: [
+            { required: true, message: "请选择食材来源", trigger: "change" }
+          ],
+          image: [{ required: true, message: "请上传食材图片" }]
+        },
+
+        refrigTime: null, //存储时间 int day
+        freezeTime: null,
+
+        isGood: true, // 是否是好的搭配
+        days: 0, //烹饪天数
+        daySelect: [
+          { value: 0, name: '0天' }, { value: 1, name: '1天' }, { value: 2, name: '2天' }, { value: 3, name: '3天' },
+          { value: 4, name: '4天' }, { value: 5, name: '5天' }
         ],
-        image: [{ required: true, message: "请上传食材图片" }]
-      },
+        dialogStatus: "",
 
-      refrigTime: null, //存储时间 int day
-      freezeTime: null,
+        tempRoute: {},
+        dialogImageUrl: "",
+        dialogImgPreviewVisible: false,
 
-      isGood: true, // 是否是好的搭配
+        uploadImgList: [],
 
-      dialogStatus: "",
+        sourceOptions: [
+          { value: 1, name: 'IOT' }, { value: 2, name: '掌厨' }, { value: 3, name: '运营编辑' }
+        ],
+        difficultyOptions: [
+          { value: 1, name: '简单' }, { value: 2, name: '较简单' }, { value: 3, name: '中等' },
+          { value: 4, name: '较困难' }, { value: 5, name: '困难' }
+        ],
+        hasVideoOptions: [{ value: 1, name: '是' }, { value: 0, name: '否' }],
 
-      tempRoute: {},
-      dialogImageUrl: "",
-      dialogImgPreviewVisible: false,
-
-      uploadImgList: [],
-
-      sourceOptions: [
-        {value: 1, name: 'IOT'},{value: 2, name: '掌厨'},{value: 3, name: '运营编辑'}
-      ],
-      difficultyOptions: [
-        {value: 1, name: '简单'},{value: 2, name: '较简单'},{value: 3, name: '中等'},
-        {value: 4, name: '较困难'},{value: 5, name: '困难'}
-      ],
-      hasVideoOptions: [{value: 1, name: '是'},{value: 2, name: '否'}],
-
-      seasonArr: [],
-      festivalArr: [],
-      goodPeopleArr: [],
-      badPeopleArr: [],
-      goodPhysioArr: [],
-      badPhysioArr: [],
-      goodSickArr: [],
-      badSickArr: [],
-      functionArr: [],
-      tasteArr: [], //口味
-      dishStyleArr: [], //菜系
-      cookStyleArr: [], //菜式
-      deviceArr: [], //设备品类
-      recipesCGArr: [], //食谱分类
+        seasonArr: [],
+        festivalArr: [],
+        goodPeopleArr: [],
+        badPeopleArr: [],
+        goodPhysioArr: [],
+        badPhysioArr: [],
+        goodSickArr: [],
+        badSickArr: [],
+        functionArr: [],
+        tasteArr: [], //口味
+        dishStyleArr: [], //菜系
+        cookStyleArr: [], //菜式
+        deviceArr: [], //设备品类
+        recipesCGArr: [], //食谱分类
 
 
-      seasonOptions: [],
-      festivalOptions: [],
-      peopleOptions: [],
-      physiologyOptions: [], //生理阶段
-      sickOptions: [], //疾病
-      functionOptions: [], //功效
-      tasteOptions: [], //口味
-      dishStyleOptions: [], //菜系
-      cookStyleOptions: [], //菜式
-      deviceOptions: [], //设备品类
-      recipesCGOptions: [], //食谱分类
+        seasonOptions: [],
+        festivalOptions: [],
+        peopleOptions: [],
+        physiologyOptions: [], //生理阶段
+        sickOptions: [], //疾病
+        functionOptions: [], //功效
+        tasteOptions: [], //口味
+        dishStyleOptions: [], //菜系
+        cookStyleOptions: [], //菜式
+        deviceOptions: [], //设备品类
+        // recipesCGOptions: [], //食谱分类
 
-      baikeActiveVal: "baike1",
+        baikeActiveVal: "baike1",
 
-      tempSteps: [],
-      makeTime: null
+        tempSteps: [],
+        makeTime: null
 
-    };
-  },
-  computed: {
-    contentShortLength() {
-      return this.postForm.content_short.length;
-    },
-    uploadParam() {
-      let param = {
-        token: getToken()
       };
-      return param;
     },
-    mainMaterial() {
-      let arr = []
-      for (let index = 0; index < this.postForm.material.length; index++) {
-        const el = this.postForm.material[index];
-        if (el.is_main == 1) { //主料
-          arr.push(el)
+    computed: {
+      // contentShortLength() {
+      //   return this.postForm.content_short.length;
+      // },
+      uploadParam () {
+        let param = {
+          token: getToken()
+        };
+        return param;
+      },
+      mainMaterial () {
+        let arr = []
+        for (let index = 0; index < this.postForm.material.length; index++) {
+          const el = this.postForm.material[index];
+          if (el.isMain === 1) { //主料
+            arr.push(el)
+          }
         }
+        return arr
+      },
+      subMaterial () {
+        let arr = []
+        for (let index = 0; index < this.postForm.material.length; index++) {
+          const el = this.postForm.material[index];
+          if (el.isMain === 2) { //辅料
+            arr.push(el)
+          }
+        }
+        return arr
       }
-      return arr
     },
-    subMaterial() {
-      let arr = []
-      for (let index = 0; index < this.postForm.material.length; index++) {
-        const el = this.postForm.material[index];
-        if (el.is_main == 2) { //辅料
-          arr.push(el)
-        }
-      }
-      return arr
-    }
-  },
-  created() {
-    //获取季节数据
-    fetchAllTag({ type_id: 1 }).then(res => {
-      this.seasonOptions = res.data;
-    });
-    //获取节日数据
-    fetchAllTag({ type_id: 2 }).then(res => {
-      this.festivalOptions = res.data;
-    });
-    //获取适应人群数据
-    fetchAllTag({ type_id: 3 }).then(res => {
-      this.peopleOptions = res.data;
-    });
-    //获取适应阶段数据
-    fetchAllTag({ type_id: 4 }).then(res => {
-      this.physiologyOptions = res.data;
-    });
-    //获取疾病数据
-    fetchAllTag({ type_id: 6 }).then(res => {
-      this.sickOptions = res.data;
-    });
-    //获取功效数据
-    fetchAllTag({ type_id: 5 }).then(res => {
-      this.functionOptions = res.data;
-    });
-    //获取口味数据
-    fetchAllTag({ type_id: 7 }).then(res => {
-      this.tasteOptions = res.data;
-    });
-    //获取菜系数据
-    fetchAllTag({ type_id: 8 }).then(res => {
-      this.dishStyleOptions = res.data;
-    });
-    //获取菜式数据
-    fetchAllTag({ type_id: 9 }).then(res => {
-      this.cookStyleOptions = res.data;
-    });
-    //获取设备品类数据
-    fetchAllTag({ type_id: 10 }).then(res => {
-      this.deviceOptions = res.data;
-    });
+    created () {
 
-    //获取所有食品分类
-    fetchAllRecipesType().then(res => {
-      this.recipesCGOptions = res.data;
-    });
-
-    if (this.isEdit) {
-      const id = this.$route.params && this.$route.params.id;
-      fetchRecipeDetail({ id }).then(res => {
-        let data = res.data;
-        Object.keys(this.postForm).forEach(key => {
-          this.postForm[key] = data[key];
-        });
-
-        //tags反赋值
-        this.seasonArr =  this.tagsObj2Ids(this.postForm.season);
-        this.festivalArr = this.tagsObj2Ids(this.postForm.festival);
-        this.goodPeopleArr = this.tagsObj2Ids(this.postForm.suitable_people);
-        this.badPeopleArr = this.tagsObj2Ids(this.postForm.improper_people);
-        this.goodPhysioArr = this.tagsObj2Ids(this.postForm.suitable_physiology);
-        this.badPhysioArr = this.tagsObj2Ids(this.postForm.improper_physiology);
-        this.goodSickArr = this.tagsObj2Ids(this.postForm.suitable_sick);
-        this.badSickArr = this.tagsObj2Ids(this.postForm.improper_sick);
-        this.functionArr = this.tagsObj2Ids(this.postForm.effect);
-        this.tasteArr =  this.tagsObj2Ids(this.postForm.taste) //口味
-        this.dishStyleArr =  this.tagsObj2Ids(this.postForm.dish_style) //菜系
-        this.cookStyleArr =  this.tagsObj2Ids(this.postForm.cook_style) //菜式
-        this.deviceArr =  this.tagsObj2Ids(this.postForm.device) //设备品类
-        this.recipesCGArr =  this.tagsObj2Ids(this.postForm.category) //食谱分类
-
-        if (this.postForm.step) {
-          this.tempSteps = this.postForm.step
-        }
-
-        if (this.postForm.image && this.postForm.image.length > 0) {
-          this.uploadImgList = [{ url: this.postForm.image }];
-        } else {
-          this.uploadImgList = [];
-        }
-
-        this.postForm.material = data.material
-
-        let minute = this.postForm.minute
-        let second = this.postForm.second
-
-        let hh = parseInt(minute/60)
-        let mm = minute%60
-        this.makeTime = hh+'-'+mm+'-'+second 
+      //获取季节数据
+      fetchAllTag().then(res => {
+        //获取时令季节数据
+        this.seasonOptions = res.data[1];
+        //获取节日数据
+        this.festivalOptions = res.data[2];
+        //获取适应人群数据
+        this.peopleOptions = res.data[3];
+        //获取生理阶段数据
+        this.physiologyOptions = res.data[4];
+        //获取功效数据
+        this.functionOptions = res.data[5];
+        //获取适宜疾病数据
+        this.sickOptions = res.data[6];
+        //获取口味数据
+        this.tasteOptions = res.data[7];
+        //获取菜系数据
+        this.dishStyleOptions = res.data[8];
+        //获取菜式数据
+        this.cookStyleOptions = res.data[9];
+        //获取设备品类数据
+        this.deviceOptions = res.data[10];
       });
-    } else {
-      this.postForm = Object.assign({}, defaultForm);
-    }
 
-    // Why need to make a copy of this.$route here?
-    // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
-    // https://github.com/PanJiaChen/vue-element-admin/issues/1221
-    this.tempRoute = Object.assign({}, this.$route);
-  },
-  methods: {
-    fetchData(id) {
-      // fetchArticle(id).then(response => {
-      //   this.postForm = response.data
-      //   // just for test
-      //   this.postForm.title += `   Article Id:${this.postForm.id}`
-      //   this.postForm.content_short += `   Article Id:${this.postForm.id}`
-      //   // set tagsview title
-      //   this.setTagsViewTitle()
-      //   // set page title
-      //   this.setPageTitle()
-      // }).catch(err => {
-      //   console.log(err)
-      // })
-    },
-    tagsObj2Ids(arr) {
-      let idsArr = []
-      for (let index = 0; index < arr.length; index++) {
-        const el = arr[index];
-        idsArr.push(el.tag_id)
-      }
-      return idsArr
-    },
-    setTagsViewTitle() {
-      const title = "Edit Article";
-      const route = Object.assign({}, this.tempRoute, {
-        title: `${title}-${this.postForm.id}`
-      });
-      this.$store.dispatch("tagsView/updateVisitedView", route);
-    },
-    setPageTitle() {
-      const title = "Edit Article";
-      document.title = `${title} - ${this.postForm.id}`;
-    },
-    submitForm() {
-      this.$refs["postForm"].validate(valid => {
-        if (valid) {
-          
-          let makeTimeArr = this.makeTime.split("-")
-          this.postForm.minute = parseInt(makeTimeArr[0])*60+parseInt(makeTimeArr[1])
-          this.postForm.second = parseInt(makeTimeArr[2])
-          //tags赋值
-          debugger
-          if (this.isEdit) {
-            if (
-              this.postForm.season &&
-              this.tagsObj2Ids(this.postForm.season).toString() == this.seasonArr.toString()
-            ) {
-              this.postForm.season = "";
-            } else {
-              this.postForm.season = this.seasonArr;
-            }
+      //获取所有食品分类
+      // fetchAllRecipesType().then(res => {
+      //   this.recipesCGOptions = res.data;
+      // });
 
-            if (
-              this.postForm.festival &&
-              this.tagsObj2Ids(this.postForm.festival).toString() == this.festivalArr.toString()
-            ) {
-              this.postForm.festival = "";
-            } else {
-              this.postForm.festival = this.festivalArr;
-            }
+      if (this.isEdit) {
+        const id = this.$route.params && this.$route.params.id;
+        fetchRecipeDetail({ id }).then(res => {
+          let data = res.data;
+          Object.keys(this.postForm).forEach(key => {
+            this.postForm[key] = data[key];
+          });
+          console.log(this.postForm);
 
-            if (
-              this.postForm.suitable_people &&
-              this.tagsObj2Ids(this.postForm.suitable_people).toString() == this.goodPeopleArr.toString()
-            ) {
-              this.postForm.suitable_people = "";
-            } else {
-              this.postForm.suitable_people = this.goodPeopleArr;
-            }
-
-            if (
-              this.postForm.improper_people &&
-              this.tagsObj2Ids(this.postForm.improper_people).toString() == this.badPeopleArr.toString()
-            ) {
-              this.postForm.improper_people = "";
-            } else {
-              this.postForm.improper_people = this.badPeopleArr;
-            }
-
-            if (
-              this.postForm.suitable_physiology &&
-              this.tagsObj2Ids(this.postForm.suitable_physiology).toString() == this.goodPhysioArr.toString()
-            ) {
-              this.postForm.suitable_physiology = "";
-            } else {
-              this.postForm.suitable_physiology = this.goodPhysioArr;
-            }
-
-            if (
-              this.postForm.improper_physiology &&
-              this.tagsObj2Ids(this.postForm.improper_physiology).toString() == this.badPhysioArr.toString()
-            ) {
-              this.postForm.improper_physiology = "";
-            } else {
-              this.postForm.improper_physiology = this.badPhysioArr;
-            }
-
-            if (
-              this.postForm.suitable_sick &&
-              this.tagsObj2Ids(this.postForm.suitable_sick).toString() == this.goodSickArr.toString()
-            ) {
-              this.postForm.suitable_sick = "";
-            } else {
-              this.postForm.suitable_sick = this.goodSickArr;
-            }
-
-            if (
-              this.postForm.improper_sick &&
-              this.tagsObj2Ids(this.postForm.improper_sick).toString() == this.badSickArr.toString()
-            ) {
-              this.postForm.improper_sick = "";
-            } else {
-              this.postForm.improper_sick = this.badSickArr;
-            }
-
-            if (
-              this.postForm.effect &&
-              this.tagsObj2Ids(this.postForm.effect).toString() == this.functionArr.toString()
-            ) {
-              this.postForm.effect = "";
-            } else {
-              this.postForm.effect = this.functionArr;
-            }
-
-            if (this.postForm.taste && this.tagsObj2Ids(this.postForm.taste).toString() == this.tasteArr.toString()) {
-              this.postForm.taste = ""
-            } else {
-              this.postForm.taste = this.tasteArr
-            }
-
-            if (this.postForm.dish_style && this.tagsObj2Ids(this.postForm.dish_style).toString() == this.dishStyleArr.toString()) {
-              this.postForm.dish_style = ""
-            } else {
-              this.postForm.dish_style = this.dishStyleArr
-            }
-
-            if (this.postForm.cook_style && this.tagsObj2Ids(this.postForm.cook_style).toString() == this.cookStyleArr.toString()) {
-              this.postForm.cook_style = ""
-            } else {
-              this.postForm.cook_style = this.cookStyleArr
-            }
-
-            if (this.postForm.device && this.tagsObj2Ids(this.postForm.device).toString() == this.deviceArr.toString()) {
-              this.postForm.device = ""
-            } else {
-              this.postForm.device = this.deviceArr
-            }
-
-            if (this.postForm.category && this.postForm.category.toString() == this.recipesCGArr.toString()) {
-              this.postForm.category = ""
-            } else {
-              this.postForm.category = this.recipesCGArr
-            }
-
-            this.postForm.step = this.tempSteps
-            // debugger
-          } else {
-            // this.postForm.season = this.seasonArr;
-            // this.postForm.festival = this.festivalArr;
-            // this.postForm.suitable_people_arr = this.goodPeopleArr;
-            // this.postForm.improper_people_arr = this.badPeopleArr;
-            // this.postForm.suitable_physiology = this.goodPhysioArr;
-            // this.postForm.improper_physiology = this.badPhysioArr;
-            // this.postForm.suitable_sick = this.goodSickArr;
-            // this.postForm.improper_sick = this.badSickArr;
-            // this.postForm.effect = this.functionArr;
+          //tags反赋值
+          this.seasonArr = this.tagsObj2Ids(this.postForm.season);
+          this.festivalArr = this.tagsObj2Ids(this.postForm.festival);
+          this.goodPeopleArr = this.tagsObj2Ids(this.postForm.suitablePeople);
+          this.badPeopleArr = this.tagsObj2Ids(this.postForm.improperPeople);
+          this.goodPhysioArr = this.tagsObj2Ids(this.postForm.suitablePhysiology);
+          this.badPhysioArr = this.tagsObj2Ids(this.postForm.improperPhysiology);
+          this.goodSickArr = this.tagsObj2Ids(this.postForm.suitableSick);
+          this.badSickArr = this.tagsObj2Ids(this.postForm.improperSick);
+          this.functionArr = this.tagsObj2Ids(this.postForm.effect);
+          this.tasteArr = this.tagsObj2Ids(this.postForm.taste); //口味
+          this.dishStyleArr = this.tagsObj2Ids(this.postForm.dishStyle); //菜系
+          this.cookStyleArr = this.tagsObj2Ids(this.postForm.cookStyle); //菜式
+          this.deviceArr = this.tagsObj2Ids(this.postForm.device); //设备品类
+          // this.recipesCGArr =  this.tagsObj2Ids(this.postForm.category); //食谱分类
+          console.log(this.tasteArr);
+          if (this.postForm.step) {
+            this.tempSteps = this.postForm.step
           }
 
-          createRecipe(this.postForm, this.isEdit).then(res => {
+          if (this.postForm.image && this.postForm.image.length > 0) {
+            this.uploadImgList = [{ url: this.postForm.image }];
+          } else {
+            this.uploadImgList = [];
+          }
+
+          this.postForm.material = data.material
+
+          let hours = this.postForm.hours
+          let minutes = this.postForm.minutes
+          let seconds = this.postForm.seconds
+          this.makeTime = hours + '-' + minutes + '-' + seconds
+        });
+      } else {
+        this.postForm = Object.assign({}, defaultForm);
+      }
+
+      // Why need to make a copy of this.$route here?
+      // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
+      // https://github.com/PanJiaChen/vue-element-admin/issues/1221
+      this.tempRoute = Object.assign({}, this.$route);
+    },
+    methods: {
+      fetchData (id) {
+        // fetchArticle(id).then(response => {
+        //   this.postForm = response.data
+        //   // just for test
+        //   this.postForm.title += `   Article Id:${this.postForm.id}`
+        //   this.postForm.content_short += `   Article Id:${this.postForm.id}`
+        //   // set tagsview title
+        //   this.setTagsViewTitle()
+        //   // set page title
+        //   this.setPageTitle()
+        // }).catch(err => {
+        //   console.log(err)
+        // })
+      },
+      tagsObj2Ids (arr) {
+        let idsArr = []
+        for (let index = 0; index < arr.length; index++) {
+          const el = arr[index];
+          idsArr.push(el.tagId)
+        }
+        return idsArr
+      },
+      setTagsViewTitle () {
+        const title = "Edit Article";
+        const route = Object.assign({}, this.tempRoute, {
+          title: `${title}-${this.postForm.id}`
+        });
+        this.$store.dispatch("tagsView/updateVisitedView", route);
+      },
+      setPageTitle () {
+        const title = "Edit Article";
+        document.title = `${title} - ${this.postForm.id}`;
+      },
+      submitForm () {
+        this.$refs["postForm"].validate(valid => {
+          if (valid) {
+
+            let makeTimeArr = this.makeTime.split("-")
+            this.postForm.hours = parseInt(makeTimeArr[0])
+            this.postForm.minutes =  parseInt(makeTimeArr[1])
+            this.postForm.seconds = parseInt(makeTimeArr[2])
+
+            //tags赋值
+            // debugger
+            if (this.isEdit) {
+              if (this.postForm.season && this.tagsObj2Ids(this.postForm.season).toString() == this.seasonArr.toString()) {
+                this.postForm.season = "";
+              } else {
+                this.postForm.season = this.seasonArr;
+              }
+
+              if (this.postForm.festival && this.tagsObj2Ids(this.postForm.festival).toString() == this.festivalArr.toString()
+              ) {
+                this.postForm.festival = "";
+              } else {
+                this.postForm.festival = this.festivalArr;
+              }
+
+              if (this.postForm.suitablePeople && this.tagsObj2Ids(this.postForm.suitablePeople).toString() == this.goodPeopleArr.toString()) {
+                this.postForm.suitablePeople = "";
+              } else {
+                this.postForm.suitablePeople = this.goodPeopleArr;
+              }
+
+              if (this.postForm.improperPeople && this.tagsObj2Ids(this.postForm.improperPeople).toString() == this.badPeopleArr.toString() ) {
+                this.postForm.improperPeople = "";
+              } else {
+                this.postForm.improperPeople = this.badPeopleArr;
+              }
+
+              if (this.postForm.suitablePhysiology && this.tagsObj2Ids(this.postForm.suitablePhysiology).toString() == this.goodPhysioArr.toString()
+              ) {
+                this.postForm.suitablePhysiology = "";
+              } else {
+                this.postForm.suitablePhysiology = this.goodPhysioArr;
+              }
+
+              if (this.postForm.improperPhysiology && this.tagsObj2Ids(this.postForm.improperPhysiology).toString() == this.badPhysioArr.toString()
+              ) {
+                this.postForm.improperPhysiology = "";
+              } else {
+                this.postForm.improperPhysiology = this.badPhysioArr;
+              }
+
+              if (this.postForm.suitableSick && this.tagsObj2Ids(this.postForm.suitableSick).toString() == this.goodSickArr.toString()) {
+                this.postForm.suitableSick = "";
+              } else {
+                this.postForm.suitableSick = this.goodSickArr;
+              }
+
+              if (this.postForm.improperSick && this.tagsObj2Ids(this.postForm.improperSick).toString() == this.badSickArr.toString()
+              ) {
+                this.postForm.improperSick = "";
+              } else {
+                this.postForm.improperSick = this.badSickArr;
+              }
+
+              if (this.postForm.effect && this.tagsObj2Ids(this.postForm.effect).toString() == this.functionArr.toString()
+              ) {
+                this.postForm.effect = "";
+              } else {
+                this.postForm.effect = this.functionArr;
+              }
+
+              if (this.postForm.taste && this.tagsObj2Ids(this.postForm.taste).toString() == this.tasteArr.toString()) {
+                this.postForm.taste = ""
+              } else {
+                this.postForm.taste = this.tasteArr
+              }
+
+              if (this.postForm.dishStyle && this.tagsObj2Ids(this.postForm.dishStyle).toString() == this.dishStyleArr.toString()) {
+                this.postForm.dishStyle = ""
+              } else {
+                this.postForm.dishStyle = this.dishStyleArr
+              }
+
+              if (this.postForm.cookStyle && this.tagsObj2Ids(this.postForm.cookStyle).toString() == this.cookStyleArr.toString()) {
+                this.postForm.cookStyle = ""
+              } else {
+                this.postForm.cookStyle = this.cookStyleArr
+              }
+
+              if (this.postForm.device && this.tagsObj2Ids(this.postForm.device).toString() == this.deviceArr.toString()) {
+                this.postForm.device = ""
+              } else {
+                this.postForm.device = this.deviceArr
+              }
+
+              if (this.postForm.category && this.postForm.category.toString() == this.recipesCGArr.toString()) {
+                this.postForm.category = ""
+              } else {
+                this.postForm.category = this.recipesCGArr
+              }
+
+              this.postForm.step = this.tempSteps
+              // debugger
+            } else {
+              // this.postForm.season = this.seasonArr;
+              // this.postForm.festival = this.festivalArr;
+              // this.postForm.suitable_people_arr = this.goodPeopleArr;
+              // this.postForm.improper_people_arr = this.badPeopleArr;
+              // this.postForm.suitable_physiology = this.goodPhysioArr;
+              // this.postForm.improper_physiology = this.badPhysioArr;
+              // this.postForm.suitable_sick = this.goodSickArr;
+              // this.postForm.improper_sick = this.badSickArr;
+              // this.postForm.effect = this.functionArr;
+            }
+
+            createRecipe(this.postForm, this.isEdit).then(res => {
+              this.$router.go(-1); //返回上一层
+              this.$notify({
+                title: "成功",
+                message: "已成功保存",
+                type: "success",
+                duration: 1000
+              });
+            });
+          }
+        });
+      },
+      goback () {
+        this.$confirm("退出页面不会保存已编辑内容, 是否继续退出?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
             this.$router.go(-1); //返回上一层
-            this.$notify({
-              title: "成功",
-              message: "已成功保存",
-              type: "success",
-              duration: 1000
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消操作"
             });
           });
-        }
-      });
-    },
-    goback() {
-      this.$confirm("退出页面不会保存已编辑内容, 是否继续退出?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$router.go(-1); //返回上一层
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消操作"
-          });
-        });
-    },
+      },
 
-    /**
-     * @description: 上传成功
-     */
-    uploadImgSuccess(response, file, fileList) {
-      console.log(response);
-      if (fileList.length > 0) {
-        this.postForm.image = response.data.all_img_url;
-        //移除必填的提醒
-        this.$refs["uploadFormItem"].clearValidate();
-      } else {
+      /**
+       * @description: 上传成功
+       */
+      uploadImgSuccess(response, file, fileList) {
+        if (fileList.length > 0 && response.code==200) {
+          this.postForm.image = response.data.all_img_url;
+          //移除必填的提醒
+          this.$refs["uploadFormItem"].clearValidate();
+        } else {
+          this.$message('上传失败');
+          this.uploadImgList = [];
+          this.postForm.image = "";
+        }
+      },
+      uploadStepImgSuccess (response, file, fileList, index) {
+        console.log(response);
+        if (fileList.length > 0) {
+          this.tempSteps[index].stepImage = response.data.all_img_url;
+        } else {
+          this.tempSteps[index].stepImage = "";
+        }
+      },
+      /**
+       * @description: 删除已上传图片
+       */
+      uploadImgRemove (file, fileList) {
         this.postForm.image = "";
-      }
-    },
-    uploadStepImgSuccess(response, file, fileList, index) {
-      console.log(response);
-      if (fileList.length > 0) {
-        this.tempSteps[index].stepimage = response.data.all_img_url;
-      } else {
-        this.tempSteps[index].stepimage = "";
-      }
-    },
-    /**
-     * @description: 删除已上传图片
-     */
-    uploadImgRemove(file, fileList) {
-      this.postForm.image = "";
-    },
-    uploadStepImgRemove(file, fileList, index) {
-      this.tempSteps[index].stepimage = "";
-    },
-    /**
-     * @description: 上传图片预览
-     * @param file
-     */
-    handleUploadImgPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogImgPreviewVisible = true;
-    },
-    uploadExceed(files, fileList) {
-      this.$message.error("图片只能上传一张，请先删除再上传！");
-    },
-    handleTabClick() {},
-    handleCreateStep(){
-      let cookid = null
-      if (this.$route.params && this.$route.params.id) {
-        cookid = this.$route.params.id
-      }
-      this.tempSteps.push({
-        cookid: cookid,
-        stepdesc: null,
-        stepimage: null
-      })
-    },
-    /**
-     * @description: 删除功效信息
-     * @param row
-     */
-    delStep(index) {
-      this.$confirm("确定删除该步骤?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.tempSteps.splice(index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
+      },
+      uploadStepImgRemove (file, fileList, index) {
+        this.tempSteps[index].stepImage = "";
+      },
+      /**
+       * @description: 上传图片预览
+       * @param file
+       */
+      handleUploadImgPreview (file) {
+        this.dialogImageUrl = file.url;
+        this.dialogImgPreviewVisible = true;
+      },
+      uploadExceed (files, fileList) {
+        this.$message.error("图片只能上传一张，请先删除再上传！");
+      },
+      handleTabClick () {
+      },
+      handleCreateStep () {
+        let cookId = null
+        if (this.$route.params && this.$route.params.id) {
+          cookId = this.$route.params.id
+        }
+        this.tempSteps.push({
+          cookId: cookId,
+          stepDesc: null,
+          stepImage: null
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
+      },
+      /**
+       * @description: 删除功效信息
+       * @param row
+       */
+      delStep (index) {
+        this.$confirm("确定删除该步骤?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            this.tempSteps.splice(index, 1);
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
+            });
           });
-        });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-.form-item-title {
-  font-size: 15px;
-  color: #606266;
-  font-weight: bold;
-}
-.el-form-item__label {
-  font-size: 15px;
-}
-.createPost-container {
-  position: relative;
-  background: white;
+  @import "~@/styles/mixin.scss";
 
-  .createPost-main-container {
-    padding: 5px 45px 5px 50px;
-
-    .postInfo-container {
-      position: relative;
-      @include clearfix;
-      margin-bottom: 10px;
-
-      .postInfo-container-item {
-        float: left;
-      }
-    }
+  .form-item-title {
+    font-size: 15px;
+    color: #606266;
+    font-weight: bold;
   }
 
-  .word-counter {
-    width: 40px;
-    position: absolute;
-    right: 10px;
-    top: 0px;
-  }
-}
-
-.article-textarea /deep/ {
-  textarea {
-    padding-right: 40px;
-    resize: none;
-    border: none;
-    border-radius: 0px;
-    border-bottom: 1px solid #bfcbd9;
-  }
-}
-.divider {
-  padding: 15px 45px;
-  font-weight: bold;
-  color: #333;
-  border-bottom: 1px solid #cacaca;
-}
-.el-select {
-  width: calc(100% - 50px);
-}
-.baikeTextarea {
-  width: calc(100% - 30px);
-}
-.p-dialog {
-  border-radius: 5px;
-}
-.colloct-header {
-  display: flex;
-  height: 28px;
-  .colloct-title {
-    flex: 1;
-  }
-  .colloct-add {
-  }
-}
-.step-cell{
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-}
-.step-cell-hd{
-
-}
-.cell-img-con{
-  padding-top: 5px;
-}
-.step-cell-text {
-  flex: 1;
-  margin: 0 20px;
-}
-.step-cell-ft{
-  img{
-    width: 30px;
-    cursor: pointer;
-  }
-}
-
-</style>
-<style lang="scss">
-.createPost-container {
   .el-form-item__label {
     font-size: 15px;
   }
-  .el-tag--info,
-  .el-tag--info .el-tag__close {
-    color: #454545;
+
+  .createPost-container {
+    position: relative;
+    background: white;
+
+    .createPost-main-container {
+      padding: 5px 45px 5px 50px;
+
+      .postInfo-container {
+        position: relative;
+        @include clearfix;
+        margin-bottom: 10px;
+
+        .postInfo-container-item {
+          float: left;
+        }
+      }
+    }
+
+    .word-counter {
+      width: 40px;
+      position: absolute;
+      right: 10px;
+      top: 0px;
+    }
   }
-  .el-select .el-tag {
-    background-color: #e8e8e8;
+
+  .article-textarea /deep/ {
+    textarea {
+      padding-right: 40px;
+      resize: none;
+      border: none;
+      border-radius: 0px;
+      border-bottom: 1px solid #bfcbd9;
+    }
   }
-  
-}
-.step-cell{
-  .el-upload--picture-card{
-    width: 80px;
-    height: 80px;
+
+  .divider {
+    padding: 15px 45px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #cacaca;
   }
-  .el-upload--picture-card i {
-    vertical-align: middle;
-    margin-top: -68px;
+
+  .el-select {
+    width: calc(100% - 50px);
   }
-  .el-upload-list--picture-card .el-upload-list__item {
-    width: 80px;
-    height: 80px;
+
+  .baikeTextarea {
+    width: calc(100% - 30px);
   }
-}
+
+  .p-dialog {
+    border-radius: 5px;
+  }
+
+  .colloct-header {
+    display: flex;
+    height: 28px;
+
+    .colloct-title {
+      flex: 1;
+    }
+
+    .colloct-add {
+    }
+  }
+
+  .step-cell {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .step-cell-hd {
+
+  }
+
+  .cell-img-con {
+    padding-top: 5px;
+  }
+
+  .step-cell-text {
+    flex: 1;
+    margin: 0 20px;
+  }
+
+  .step-cell-ft {
+    img {
+      width: 30px;
+      cursor: pointer;
+    }
+  }
+
+</style>
+<style lang="scss">
+  .createPost-container {
+    .el-form-item__label {
+      font-size: 15px;
+    }
+
+    .el-tag--info,
+    .el-tag--info .el-tag__close {
+      color: #454545;
+    }
+
+    .el-select .el-tag {
+      background-color: #e8e8e8;
+    }
+
+  }
+
+  .step-cell {
+    .el-upload--picture-card {
+      width: 80px;
+      height: 80px;
+    }
+
+    .el-upload--picture-card i {
+      vertical-align: middle;
+      margin-top: -68px;
+    }
+
+    .el-upload-list--picture-card .el-upload-list__item {
+      width: 80px;
+      height: 80px;
+    }
+  }
 </style>
