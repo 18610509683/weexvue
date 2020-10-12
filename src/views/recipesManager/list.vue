@@ -86,7 +86,7 @@
           </el-col>
           <el-col class="filter-item" :xs="24" :sm="12" :lg="6">
             <el-button size="small" type="primary" icon="el-icon-search" @click="handleFilter">查询</el-button>
-            <!-- <el-button size="small" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="toCreate()" >新建食材</el-button> -->
+             <el-button size="small" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="toCreate()" >新建食谱</el-button>
 <!--            <el-button size="small" style="margin-left: 10px;" type="success" icon="el-icon-refresh"-->
 <!--                       @click="syncIOTRecipes()">同步IOT食谱-->
 <!--            </el-button>-->

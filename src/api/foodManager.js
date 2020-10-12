@@ -212,13 +212,13 @@ export function fetchRecipesList(data) {
   })
 }
 
-// //食材新建或编辑
+// //食谱新建或编辑
 export function createRecipe(data,isEdit) {
   let url = ''
   if (isEdit) {
     url = '/CookManage/update'
   } else {
-    url = '/CookManage/insert'
+    url = '/CookManage/save'
   }
   return request({
     url: modelHeader+url,
@@ -261,7 +261,7 @@ export function fetchRecipeDetail(data) {
 //获取所有食材分类
 export function fetchAllRecipesType(data) {
   return request({
-    url: modelHeader+'/CookBookCategory/getFoodType',
+    url: modelHeader+'/CookManage/getCookCategory',
     method: 'post',
     data
   })

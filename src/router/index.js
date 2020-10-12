@@ -79,7 +79,7 @@ export const constantRoutes = [
       }
     ]
   },
- 
+
   {
     path: '/config',
     component: Layout,
@@ -103,24 +103,25 @@ export const constantRoutes = [
         name: 'ShipuConfig',
         component: () => import('@/views/systemConfig/index'),
         meta: { title: '食谱参数配置', icon: 'form' }
-      },
-      // 模块配置
-      {
-        path: 'model',
-        name: 'ModelConfig',
-        component: () => import('@/views/config/model'),
-        meta: { title: '模块配置', icon: 'form' }
-      },
-      // 页面配置
-      {
-        path: 'page',
-        name: 'PageConfig',
-        component: () => import('@/views/config/page'),
-        meta: { title: '页面配置', icon: 'form' }
       }
+      // 模块配置
+      // {
+      //   path: 'model',
+      //   name: 'ModelConfig',
+      //   component: () => import('@/views/config/model'),
+      //   meta: { title: '模块配置', icon: 'form' }
+      //   meta: { title: '模块配置', icon: 'form' }
+      // },
+      // // 页面配置
+      // {
+      //   path: 'page',
+      //   name: 'PageConfig',
+      //   component: () => import('@/views/config/page'),
+      //   meta: { title: '页面配置', icon: 'form' }
+      // }
     ]
   },
-  //食材管理
+  // 食材管理
     {
     path: '/foodmanager',
     component: Layout,
@@ -152,8 +153,8 @@ export const constantRoutes = [
       }
     ]
   },
-  
-  //食谱管理
+
+  // 食谱管理
   {
     path: '/recipesManager',
     component: Layout,
@@ -186,7 +187,7 @@ export const constantRoutes = [
       }
     ]
   },
-  //食材管理
+  // 食材管理
   {
     path: '/tagmanager',
     component: Layout,
@@ -296,34 +297,34 @@ export const constantRoutes = [
         name: 'feedback',
         component: () => import('@/views/yunying/feedback'),
         meta: { title: '用户反馈', icon: 'form' }
-      },
-      {
-        path: 'holiday',
-        component: () => import('@/views/care/holiday'),
-        name: 'Holiday',
-        meta: { title: '节日配置', icon: 'example' },
-        hidden: true
-      },
-      {
-        path: 'care',
-        component: () => import('@/views/care/index'),
-        name: 'Care',
-        meta: { title: '关怀管理', icon: 'example' }
-      },
-      {
-        path: 'careAdd',
-        component: () => import('@/views/care/add'),
-        name: 'CareAdd',
-        meta: { title: '关怀管理添加', icon: 'example' },
-        hidden: true
-      },
-      {
-        path: 'careUpdate',
-        component: () => import('@/views/care/edit'),
-        name: 'careUpdate',
-        meta: { title: '关怀管理编辑', icon: 'example' },
-        hidden: true
       }
+      // {
+      //   path: 'holiday',
+      //   component: () => import('@/views/care/holiday'),
+      //   name: 'Holiday',
+      //   meta: { title: '节日配置', icon: 'example' },
+      //   hidden: true
+      // },
+      // {
+      //   path: 'care',
+      //   component: () => import('@/views/care/index'),
+      //   name: 'Care',
+      //   meta: { title: '关怀管理', icon: 'example' }
+      // },
+      // {
+      //   path: 'careAdd',
+      //   component: () => import('@/views/care/add'),
+      //   name: 'CareAdd',
+      //   meta: { title: '关怀管理添加', icon: 'example' },
+      //   hidden: true
+      // },
+      // {
+      //   path: 'careUpdate',
+      //   component: () => import('@/views/care/edit'),
+      //   name: 'careUpdate',
+      //   meta: { title: '关怀管理编辑', icon: 'example' },
+      //   hidden: true
+      // }
     ]
   },
 

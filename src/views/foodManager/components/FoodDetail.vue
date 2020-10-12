@@ -692,7 +692,6 @@ export default {
             }else{
               this.postForm.season = this.seasonArr;
             }
-
             if (this.postForm.festival && (this.postForm.festival == this.festivalArr)) {
               this.postForm.festival = ''
             }else{
@@ -703,7 +702,6 @@ export default {
             // console.log(this.goodPeopleArr)
             if (this.postForm.suitablePeople && (this.postForm.suitablePeople == this.goodPeopleArr)) {
               this.postForm.suitablePeople = ''
-              // debugger
             }else{
               this.postForm.suitablePeople = this.goodPeopleArr;
             }
@@ -743,8 +741,6 @@ export default {
             }else{
               this.postForm.effect = this.functionArr;
             }
-
-
             //食材搭配
             if (this.postForm.suitableFood && (this.postForm.suitableFood == this.goodCollocts)) {
               this.postForm.suitableFood = ''
