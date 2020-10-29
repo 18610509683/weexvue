@@ -115,7 +115,7 @@
             <el-tag :type="row.status | tagCssFilter">{{ row.status | statusFilter }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" align="center" prop="update_time"></el-table-column>
+        <el-table-column label="更新时间" align="center" prop="updateTime"></el-table-column>
         <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template slot-scope="{row}">
             <el-button type="primary" size="mini" @click="toCreate(row.id)">编辑</el-button>
