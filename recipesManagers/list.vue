@@ -6,7 +6,7 @@
   <div class="app-container foodincome-con">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>食谱列表</span>
+        <span>食谱列表2</span>
       </div>
       <div class="filter-container">
         <el-row>

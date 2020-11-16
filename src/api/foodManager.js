@@ -203,7 +203,7 @@ export function updateRecipeTypeStatus(data) {
 
 
 
-//食材列表
+//分页获取食谱列表
 export function fetchRecipesList(data) {
   return request({
     url: modelHeader+'/CookManage/index',
