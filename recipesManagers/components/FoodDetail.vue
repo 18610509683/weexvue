@@ -128,9 +128,25 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="16">
-                  <el-form-item label-width="120px" label="视频地址:" class="postInfo-container-item">
-                    <el-input style="width: 600px;" v-model="postForm.videoUrl" :disabled="true"></el-input>
-                  </el-form-item>
+<!--                  <el-form-item label-width="120px" label="视频地址:" class="postInfo-container-item">-->
+<!--                    <el-input style="width: 600px;" v-model="postForm.videoUrl" :disabled="true"></el-input>-->
+<!--                  </el-form-item>-->
+                  <el-upload
+                    name="fileUrl"
+                    class="upload-demo"
+                    action="https://fridge-api2.mideav.com/admin/CookManage/uploadFile"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :before-remove="beforeRemove"
+                    :on-success = "uploadFileSuccess"
+                    multiple
+                    :limit="10"
+                    :data="uploadParam"
+                    :on-exceed="handleExceed"
+                    :file-list="uploadVideoList">
+                    <el-button size="small" type="primary">点击上传</el-button>
+<!--                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+                  </el-upload>
                 </el-col>
               </el-row>
               <el-row>
@@ -147,7 +163,7 @@
                     <slot name="label">
                       <div class="form-item-title">食谱描述:</div>
                     </slot>
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.desc"></el-input>
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="postForm.description"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -170,6 +186,22 @@
             <el-form-item label-width="120px" label="口味:">
               <el-select v-model="tasteArr" multiple filterable placeholder="请选择口味">
                 <el-option v-for="(item,index) in tasteOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label-width="120px" label="烹饪方式:">
+              <el-select v-model="cookPatternArr" multiple filterable placeholder="请选择烹饪方式">
+                <el-option v-for="(item,index) in cookPatternOptions" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label-width="120px" label="职业:">
+              <el-select v-model="occupationArr" multiple filterable placeholder="请选择职业">
+                <el-option v-for="(item,index) in occupationOptions" :key="index" :label="item.name"
                            :value="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -254,7 +286,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label-width="120px" label="功效:">
               <el-select v-model="functionArr" multiple filterable placeholder="请选择功效">
                 <el-option v-for="(item,index) in functionOptions" :key="index" :label="item.name"
@@ -262,13 +294,13 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <!--          <el-col :span="24">-->
-          <!--            <el-form-item label-width="120px" label="分类:">-->
-          <!--              <el-select v-model="recipesCGArr" multiple filterable placeholder="请选择分类">-->
-          <!--                <el-option v-for="(item,index) in recipesCGOptions" :key="index" :label="item.name" :value="item.id"></el-option>-->
-          <!--              </el-select>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
+                    <el-col :span="24">
+                      <el-form-item label-width="120px" label="分类:">
+                        <el-select v-model="recipesCGArr" multiple filterable placeholder="请选择分类">
+                          <el-option v-for="(item,index) in recipesCGOptions" :key="index" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
         </el-row>
       </div>
       <div class="divider">食谱详情</div>
@@ -367,7 +399,7 @@
     isHasVideo: null, //是否有视频
     videoUrl: null, //视频地址
     introduce: null, //简介
-    desc: null, //描述
+    description: null, //描述
     cook_duration: null, //时长
     calories: null, //热量
 
@@ -385,6 +417,8 @@
     category: null, //分类
     taste: null, //口味
     cookStyle: null, //菜式
+    cookPattern: null, //烹饪方式
+    occupation: null, //职业
 
     step: null, //烹饪步骤
     material: [], //	烹饪材料
@@ -414,7 +448,7 @@
         loading: false,
         rules: {
           name: [{ required: true, message: "请输入食材名称", trigger: "blur" }],
-          id: [{ required: true, message: "食材ID", trigger: "blur" }],
+          // id: [{ required: true, message: "食材ID", trigger: "blur" }],
           source: [
             { required: true, message: "请选择食材来源", trigger: "change" }
           ],
@@ -437,6 +471,7 @@
         dialogImgPreviewVisible: false,
 
         uploadImgList: [],
+        uploadVideoList:[],
 
         sourceOptions: [
           { value: 1, name: 'IOT' }, { value: 2, name: '掌厨' }, { value: 3, name: '运营编辑' }
@@ -459,7 +494,9 @@
         tasteArr: [], //口味
         dishStyleArr: [], //菜系
         cookStyleArr: [], //菜式
+        cookPatternArr: [], //烹饪方式
         deviceArr: [], //设备品类
+        occupationArr: [], //职业
         recipesCGArr: [], //食谱分类
 
 
@@ -472,8 +509,10 @@
         tasteOptions: [], //口味
         dishStyleOptions: [], //菜系
         cookStyleOptions: [], //菜式
+        cookPatternOptions: [], //烹饪方式
         deviceOptions: [], //设备品类
-        // recipesCGOptions: [], //食谱分类
+        occupationOptions: [], //职业
+        recipesCGOptions: [], //食谱分类
 
         baikeActiveVal: "baike1",
 
@@ -537,12 +576,16 @@
         this.cookStyleOptions = res.data[9];
         //获取设备品类数据
         this.deviceOptions = res.data[10];
+        //获取烹饪方式数据
+        this.cookPatternOptions = res.data[11];
+        //获取职业数据
+        this.occupationOptions = res.data[12];
       });
 
-      //获取所有食品分类
-      // fetchAllRecipesType().then(res => {
-      //   this.recipesCGOptions = res.data;
-      // });
+      //获取所有食谱分类
+      fetchAllRecipesType().then(res => {
+        this.recipesCGOptions = res.data;
+      });
 
       if (this.isEdit) {
         const id = this.$route.params && this.$route.params.id;
@@ -566,8 +609,10 @@
           this.tasteArr = this.tagsObj2Ids(this.postForm.taste); //口味
           this.dishStyleArr = this.tagsObj2Ids(this.postForm.dishStyle); //菜系
           this.cookStyleArr = this.tagsObj2Ids(this.postForm.cookStyle); //菜式
+          this.cookPatternArr = this.tagsObj2Ids(this.postForm.cookPattern); //烹饪方式
+          this.occupationArr = this.tagsObj2Ids(this.postForm.occupation); //职业
           this.deviceArr = this.tagsObj2Ids(this.postForm.device); //设备品类
-          // this.recipesCGArr =  this.tagsObj2Ids(this.postForm.category); //食谱分类
+          this.recipesCGArr =  this.tagsObj2Ids(this.postForm.category); //食谱分类
           console.log(this.tasteArr);
           if (this.postForm.step) {
             this.tempSteps = this.postForm.step
@@ -578,6 +623,14 @@
           } else {
             this.uploadImgList = [];
           }
+
+
+          this.uploadVideoList =  this.getVideoList(this.postForm.videoUrl); //食谱视频
+          // if (this.postForm.videoUrl && this.postForm.videoUrl.length > 0) {
+          //   this.uploadVideoList = [{ url: this.postForm.image,name:"测试" }];
+          // } else {
+          //   this.uploadVideoList = [];
+          // }
 
           this.postForm.material = data.material
 
@@ -618,6 +671,14 @@
         }
         return idsArr
       },
+      getVideoList (arr) {
+        let idsArr = []
+        for (let index = 0; index < arr.length; index++) {
+          let tmpArr = {'name':arr[index]};
+          idsArr.push(tmpArr)
+        }
+        return idsArr
+      },
       setTagsViewTitle () {
         const title = "Edit Article";
         const route = Object.assign({}, this.tempRoute, {
@@ -647,8 +708,7 @@
                 this.postForm.season = this.seasonArr;
               }
 
-              if (this.postForm.festival && this.tagsObj2Ids(this.postForm.festival).toString() == this.festivalArr.toString()
-              ) {
+              if (this.postForm.festival && this.tagsObj2Ids(this.postForm.festival).toString() == this.festivalArr.toString()) {
                 this.postForm.festival = "";
               } else {
                 this.postForm.festival = this.festivalArr;
@@ -666,15 +726,13 @@
                 this.postForm.improperPeople = this.badPeopleArr;
               }
 
-              if (this.postForm.suitablePhysiology && this.tagsObj2Ids(this.postForm.suitablePhysiology).toString() == this.goodPhysioArr.toString()
-              ) {
+              if (this.postForm.suitablePhysiology && this.tagsObj2Ids(this.postForm.suitablePhysiology).toString() == this.goodPhysioArr.toString()) {
                 this.postForm.suitablePhysiology = "";
               } else {
                 this.postForm.suitablePhysiology = this.goodPhysioArr;
               }
 
-              if (this.postForm.improperPhysiology && this.tagsObj2Ids(this.postForm.improperPhysiology).toString() == this.badPhysioArr.toString()
-              ) {
+              if (this.postForm.improperPhysiology && this.tagsObj2Ids(this.postForm.improperPhysiology).toString() == this.badPhysioArr.toString()) {
                 this.postForm.improperPhysiology = "";
               } else {
                 this.postForm.improperPhysiology = this.badPhysioArr;
@@ -686,15 +744,13 @@
                 this.postForm.suitableSick = this.goodSickArr;
               }
 
-              if (this.postForm.improperSick && this.tagsObj2Ids(this.postForm.improperSick).toString() == this.badSickArr.toString()
-              ) {
+              if (this.postForm.improperSick && this.tagsObj2Ids(this.postForm.improperSick).toString() == this.badSickArr.toString()) {
                 this.postForm.improperSick = "";
               } else {
                 this.postForm.improperSick = this.badSickArr;
               }
 
-              if (this.postForm.effect && this.tagsObj2Ids(this.postForm.effect).toString() == this.functionArr.toString()
-              ) {
+              if (this.postForm.effect && this.tagsObj2Ids(this.postForm.effect).toString() == this.functionArr.toString()) {
                 this.postForm.effect = "";
               } else {
                 this.postForm.effect = this.functionArr;
@@ -730,20 +786,55 @@
                 this.postForm.category = this.recipesCGArr
               }
 
-              this.postForm.step = this.tempSteps
-              // debugger
-            } else {
-              // this.postForm.season = this.seasonArr;
-              // this.postForm.festival = this.festivalArr;
-              // this.postForm.suitable_people_arr = this.goodPeopleArr;
-              // this.postForm.improper_people_arr = this.badPeopleArr;
-              // this.postForm.suitable_physiology = this.goodPhysioArr;
-              // this.postForm.improper_physiology = this.badPhysioArr;
-              // this.postForm.suitable_sick = this.goodSickArr;
-              // this.postForm.improper_sick = this.badSickArr;
-              // this.postForm.effect = this.functionArr;
-            }
+              //烹饪方式
+              if (this.postForm.cookPattern && this.postForm.cookPattern.toString() == this.cookPatternArr.toString()) {
+                this.postForm.cookPattern = ""
+              } else {
+                this.postForm.cookPattern = this.cookPatternArr
+              }
 
+              //职业
+              if (this.postForm.occupation && this.postForm.occupation.toString() == this.occupationArr.toString()) {
+                this.postForm.occupation = ""
+              } else {
+                this.postForm.occupation = this.occupationArr
+              }
+
+              //视频地址
+              let tmpVideoArr =  this.uploadVideoList.map(function(v){return v.name});
+              // let tmpVideoArr =
+              if (this.postForm.videoUrl && this.postForm.videoUrl.toString() == tmpVideoArr.toString()) {
+                this.postForm.videoUrl = ""
+              } else {
+                this.postForm.videoUrl = tmpVideoArr
+              }
+
+              this.postForm.step = this.tempSteps
+
+            } else {
+              this.postForm.id = '0';
+              this.postForm.season = this.seasonArr;
+              this.postForm.festival = this.festivalArr;
+              this.postForm.suitablePeople = this.goodPeopleArr;
+              this.postForm.improperPeople = this.badPeopleArr;
+              this.postForm.suitablePhysiology = this.goodPhysioArr;
+              this.postForm.improperPhysiology = this.badPhysioArr;
+              this.postForm.suitableSick = this.goodSickArr;
+              this.postForm.improperSick = this.badSickArr;
+              this.postForm.effect = this.functionArr;
+              this.postForm.taste = this.tasteArr;
+              this.postForm.dishStyle = this.dishStyleArr;
+              this.postForm.cookStyle = this.cookStyleArr;
+              this.postForm.device = this.deviceArr;
+              this.postForm.category = this.recipesCGArr;
+              this.postForm.step = this.tempSteps
+              this.postForm.cookPattern = this.cookPatternArr
+              this.postForm.occupation = this.occupationArr
+              this.postForm.videoUrl = this.uploadVideoList.map(function(v){return v.name});
+            }
+            console.log(this.postForm);
+            // debugger
+            // return;
             createRecipe(this.postForm, this.isEdit).then(res => {
               this.$router.go(-1); //返回上一层
               this.$notify({
@@ -786,6 +877,58 @@
           this.uploadImgList = [];
           this.postForm.image = "";
         }
+      },
+      uploadFileSuccess(response, file, fileList){
+        if (fileList.length > 0 && response.code==200) {
+          file.name = file.response.data.all_img_url
+          this.uploadVideoList.push({'name':file.name})
+          // this.postForm.videoUrl += ","+ response.data.all_img_url;
+
+          console.log(fileList)
+          console.log(file)
+          console.log(response)
+          console.log(this.uploadVideoList)
+          //移除必填的提醒
+          this.$refs["uploadFormItem"].clearValidate();
+        } else {
+          this.$message('上传失败');
+          console.log(fileList)
+          console.log(file)
+          console.log(this.uploadVideoList)
+          for (let index = 0; index < fileList.length; index++) {
+            if(fileList[index].uid == file.uid){
+              fileList.splice(index,1)
+            }
+          }
+
+
+          // this.uploadVideoList.push({'name':file.name})
+          // this.uploadImgList = [];
+          // this.postForm.image = "";
+        }
+      },
+      handlePreview(file){
+        console.log(file)
+      },
+      beforeRemove(file,fileList){
+        // console.log(file)
+        // console.log(fileList)
+      },
+      handleRemove(file,fileList){
+        console.log(file)
+        console.log(fileList)
+        //video删除对应视频地址
+        // let idsArr = []
+        for (let index = 0; index < this.uploadVideoList.length; index++) {
+          if(this.uploadVideoList[index].name == file.name){
+            this.uploadVideoList.splice(index,1)
+            // console.log(this.uploadVideoList)
+          }
+        }
+      },
+      handleExceed(file, fileList){
+        console.log(file)
+        console.log(fileList)
       },
       uploadStepImgSuccess (response, file, fileList, index) {
         console.log(response);
