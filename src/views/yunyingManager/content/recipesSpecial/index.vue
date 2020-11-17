@@ -8,7 +8,7 @@
 				<div class="top-box">
 					<div class="info-box">
 						<div class="info-title">昨日新增</div>
-						<div class="info-text">{{recipesInfo.yestodayAddTotal}}</div>
+						<div class="info-text">{{recipesInfo.yesterdayAddTotal||recipesInfo.yestodayAddTotal}}</div>
 					</div>
 					<div class="info-box">
 						<div class="info-title">新增失效</div>
@@ -214,7 +214,7 @@
 				page_size: 10
 			},
 			recipesInfo: {
-				yestodayAddTotal: '--',
+				yesterdayAddTotal: '--',
 				overdueAddTotal: '--',
 				allTotal: '--',
 				overdueAllTotal: '--',

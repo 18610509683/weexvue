@@ -52,12 +52,14 @@ export default {
       return toPath(params)
     },
     handleLink(item) {
-      const { redirect, path } = item
-      if (redirect) {
-        this.$router.push(redirect)
-        return
-      }
-      this.$router.push(this.pathCompile(path))
+//    const { redirect, path } = item
+//    console.log(item)
+//    console.log(redirect,path)
+//    if (redirect) {
+//      this.$router.push(redirect)
+//      return
+//    }
+//    this.$router.push(this.pathCompile(path))
     }
   }
 }
