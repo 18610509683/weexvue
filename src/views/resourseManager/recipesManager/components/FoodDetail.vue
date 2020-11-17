@@ -645,8 +645,8 @@
           let minutes = this.postForm.minutes
           let seconds = this.postForm.seconds
           this.makeTime = hours + '-' + minutes + '-' + seconds
-          for (let index = 0; index < this.postForm.step.length; index++) {
-              let element = this.postForm.step[index]
+          for (let index = 0; index < this.tempSteps.length; index++) {
+              let element = this.tempSteps[index]
               let hour = parseInt(element.duration/3600)
               let minute = parseInt(element.duration%3600/60)
               let second = element.duration%3600%60
@@ -705,15 +705,21 @@
             this.postForm.minutes =  parseInt(makeTimeArr[1])
             this.postForm.seconds = parseInt(makeTimeArr[2])
 
-
-            for (let index = 0; index < this.postForm.step.length; index++) {
-              let element = this.postForm.step[index]
+            let tempSteps = []
+            for (let index = 0; index < this.tempSteps.length; index++) {
+              let element =  Object.assign({}, this.tempSteps[index])
               if (element.duration) {
                 let durTimeArr = element.duration.split("-")
                 element.duration = parseInt(durTimeArr[0])*60*60+parseInt(durTimeArr[1])*60+parseInt(durTimeArr[2])
               }
-              
+              tempSteps.push(element)
             }
+
+
+            this.postForm.step = tempSteps
+
+
+            
 
 
             //tags赋值
@@ -807,9 +813,7 @@
               } else {
                 this.postForm.category = this.recipesCGArr
               }
-
-              this.postForm.step = this.tempSteps
-              // debugger
+             
             } else {
               // this.postForm.season = this.seasonArr;
               // this.postForm.festival = this.festivalArr;
@@ -821,6 +825,8 @@
               // this.postForm.improper_sick = this.badSickArr;
               // this.postForm.effect = this.functionArr;
             }
+
+
             createRecipe(this.postForm, this.isEdit).then(res => {
               this.$router.go(-1); //返回上一层
               this.$notify({
