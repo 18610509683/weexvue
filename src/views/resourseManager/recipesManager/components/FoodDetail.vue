@@ -40,6 +40,14 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
+                <el-col :span="8">
+                  <el-form-item label-width="120px" label="智能食谱:" class="postInfo-container-item" prop="cookType">
+                    <el-select v-model="postForm.cookType" placeholder="请选择智能食谱类型" style="width: 180px;">
+                      <el-option v-for="(item,index) in smartFoodOptions" :key="index" :label="item.name"
+                                 :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
                 <!-- <el-col :span="8">
                   <el-form-item
                     label-width="120px"
@@ -70,15 +78,6 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-              </el-row>
-
-              <el-row>
-                <!--<el-col :span="8">
-                  <el-form-item label-width="120px" label="食材ID:" class="postInfo-container-item" prop="id">
-                    <el-input placeholder="食谱ID" v-model="postForm.id" :disabled="true"></el-input>
-                  </el-form-item>
-                </el-col>-->
-
                 <el-col :span="8">
                   <el-form-item label-width="120px" label="IOT食谱ID:" class="postInfo-container-item">
                     <el-input placeholder="请输入内容" v-model="postForm.thirdId" :disabled="true"></el-input>
@@ -90,6 +89,16 @@
                     <el-input placeholder="请输入内容" v-model="postForm.thirdNo" :disabled="true"></el-input>
                   </el-form-item>
                 </el-col>
+              </el-row>
+
+              <el-row>
+                <!--<el-col :span="8">
+                  <el-form-item label-width="120px" label="食材ID:" class="postInfo-container-item" prop="id">
+                    <el-input placeholder="食谱ID" v-model="postForm.id" :disabled="true"></el-input>
+                  </el-form-item>
+                </el-col>-->
+
+                
               </el-row>
 
               <el-row>
@@ -299,7 +308,45 @@
                     </el-upload>
                   </div>
                   <div class="step-cell-text">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="item.stepDesc"></el-input>
+                    <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="item.stepDesc"></el-input>
+                  </div>
+                  <div class="sels-con">
+                    <el-col :span="12">
+                      <el-form-item label-width="100px" label="冰箱烹饪:" class="postInfo-container-item">
+                        <el-select v-model="item.type" placeholder="请选择冰箱烹饪类型" @change="cookStepChange(item)">
+                          <el-option v-for="(item,index) in smartFoodOptions" :key="index" :label="item.name"
+                                    :value="item.value" />
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label-width="100px" label="放入冰箱:" class="postInfo-container-item">
+                        <el-select v-model="item.position" placeholder="请选择冰箱位置" :disabled="item.type != 1">
+                          <el-option v-for="(item,index) in fridgeRoomOptions" :key="index" :label="item.name"
+                                    :value="item.value" />
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12" v-if="item.type == 0 || item.type == 1">
+                      <el-form-item label-width="100px" label="烹饪时分秒:" class="postInfo-container-item">
+                        <el-time-picker v-model="item.duration"
+                                        format="HH时mm分ss秒"
+                                        value-format="HH-mm-ss" :disabled="item.type == 0"></el-time-picker>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12" v-if="item.type == 2">
+                      <el-form-item label-width="100px" label="发酵类型:" class="postInfo-container-item">
+                        <el-select v-model="item.fermentType" placeholder="请选择发酵类型">
+                          <el-option v-for="(item,index) in fermentTypeOptions" :key="index" :label="item.name"
+                                    :value="item.value" />
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label-width="100px" label="温度调节:" class="postInfo-container-item">
+                        <el-input style="width: 220px;" v-model="item.temperature" :disabled="item.type != 1"></el-input>
+                      </el-form-item>
+                    </el-col>
                   </div>
                   <div class="step-cell-ft">
                     <img @click="delStep(index)" src="@/assets/del.png">
@@ -364,6 +411,7 @@
     thirdNo: null, //第三方食谱编码
     difficultyLevel: null, //烹饪难度
     source: null, //来源
+    cookType: null, //智能食谱类型
     isHasVideo: null, //是否有视频
     videoUrl: null, //视频地址
     introduce: null, //简介
@@ -418,6 +466,7 @@
           source: [
             { required: true, message: "请选择食材来源", trigger: "change" }
           ],
+          cookType: [{ required: true, message: "请选择智能食谱类型", trigger: "change" }],
           image: [{ required: true, message: "请上传食材图片" }]
         },
 
@@ -440,6 +489,15 @@
 
         sourceOptions: [
           { value: 1, name: 'IOT' }, { value: 2, name: '掌厨' }, { value: 3, name: '运营编辑' }
+        ],
+        smartFoodOptions: [
+          { value: 0, name: '无' },{ value: 1, name: '低温烹饪' }, { value: 2, name: '低温发酵' } 
+        ],
+        fermentTypeOptions: [
+          { value: 1, name: '软质面包' },{ value: 2, name: '硬质面包' }, { value: 3, name: '披萨' }, { value: 4, name: '馒头卷' } , { value: 5, name: '包类' } , { value: 6, name: '卷类' } 
+        ], //发酵类型
+        fridgeRoomOptions: [
+          { value: 1, name: '冷藏室' },{ value: 2, name: '冷冻室' }
         ],
         difficultyOptions: [
           { value: 1, name: '简单' }, { value: 2, name: '较简单' }, { value: 3, name: '中等' },
@@ -523,7 +581,7 @@
         this.festivalOptions = res.data[2];
         //获取适应人群数据
         this.peopleOptions = res.data[3];
-        alert()
+        
         console.log(res.data[3])
         //获取生理阶段数据
         this.physiologyOptions = res.data[4];
@@ -587,6 +645,13 @@
           let minutes = this.postForm.minutes
           let seconds = this.postForm.seconds
           this.makeTime = hours + '-' + minutes + '-' + seconds
+          for (let index = 0; index < this.postForm.step.length; index++) {
+              let element = this.postForm.step[index]
+              let hour = parseInt(element.duration/3600)
+              let minute = parseInt(element.duration%3600/60)
+              let second = element.duration%3600%60
+              element.duration = hour + '-' + minute + '-' + second
+            }
         });
       } else {
         this.postForm = Object.assign({}, defaultForm);
@@ -639,6 +704,17 @@
             this.postForm.hours = parseInt(makeTimeArr[0])
             this.postForm.minutes =  parseInt(makeTimeArr[1])
             this.postForm.seconds = parseInt(makeTimeArr[2])
+
+
+            for (let index = 0; index < this.postForm.step.length; index++) {
+              let element = this.postForm.step[index]
+              if (element.duration) {
+                let durTimeArr = element.duration.split("-")
+                element.duration = parseInt(durTimeArr[0])*60*60+parseInt(durTimeArr[1])*60+parseInt(durTimeArr[2])
+              }
+              
+            }
+
 
             //tags赋值
             // debugger
@@ -745,7 +821,6 @@
               // this.postForm.improper_sick = this.badSickArr;
               // this.postForm.effect = this.functionArr;
             }
-
             createRecipe(this.postForm, this.isEdit).then(res => {
               this.$router.go(-1); //返回上一层
               this.$notify({
@@ -811,7 +886,7 @@
        * @param file
        */
       handleUploadImgPreview (file) {
-        this.dialogImageUrl = file.url;
+        this.dialogImageUrl = file.url
         this.dialogImgPreviewVisible = true;
       },
       uploadExceed (files, fileList) {
@@ -827,7 +902,12 @@
         this.tempSteps.push({
           cookId: cookId,
           stepDesc: null,
-          stepImage: null
+          stepImage: null,
+          type: 0, //烹饪类型
+          position: null, //放入位置
+          duration: null, //烹饪时长
+          fermentType: null, //发酵类型
+          temperature: null //温度调节
         })
       },
       /**
@@ -853,6 +933,24 @@
               message: "已取消删除"
             });
           });
+      },
+      cookStepChange(item) {
+        if (item.type == 0) {
+          item.position = null
+          item.duration = null
+          item.temperature = null
+          item.fermentType = null
+        } else if (item.type == 2) {
+          item.position = 1
+          item.duration = null
+          item.temperature = null
+          item.fermentType = null
+        } else{
+          item.position = null
+          item.duration = null
+          item.temperature = null
+          item.fermentType = null
+        }
       }
     }
   };
@@ -962,6 +1060,11 @@
       width: 30px;
       cursor: pointer;
     }
+  }
+  .sels-con {
+    width: 740px;
+    display: flex;
+    flex-wrap: wrap;
   }
 
 </style>
