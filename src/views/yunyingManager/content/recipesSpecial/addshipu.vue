@@ -8,7 +8,7 @@
 				<el-row>
 					<el-col class="filter-item" :xs="12" :sm="8" :lg="4">
 						<div class="filter-title">食谱名称：</div>
-						<el-input class="filter-input" size="small" v-model="listQuery.name" placeholder="食谱名称"></el-input>
+						<el-input class="filter-input" size="small" v-model="listQuery.name" placeholder="食谱名称" clearable></el-input>
 					</el-col>
 					<el-col class="filter-item" :xs="12" :sm="8" :lg="4">
 						<div class="filter-title">状态：</div>
@@ -25,7 +25,7 @@
 					<el-col class="filter-item" :xs="12" :sm="8" :lg="4">
 						<div class="filter-title">来源：</div>
 						<el-select class="filter-input" size="small" v-model="listQuery.source" placeholder="来源" clearable>
-							<el-option v-for="(item,index) in sourceOptions" :key="index" :label="item.name" :value="item.val"></el-option>
+							<el-option v-for="(item,index) in sourceOptions0" :key="index" :label="item.name" :value="item.val"></el-option>
 						</el-select>
 
 					</el-col>
@@ -388,11 +388,24 @@
 					name: "否"
 				}
 			],
+			sourceOptions0: [{
+					val: 1,
+					name: "IOT"
+				},
+				{
+					val: 2,
+					name: "掌厨"
+				},
+				{
+					val: 3,
+					name: "运营编辑"
+				}
+			],
 			sourceOptions: [],
 			seasonOptions: [],
 			festivalOptions: [],
 			peopleOptions: [],
-			functionOptions:[],
+			functionOptions: [],
 			deviceOptions: [],
 			effectOptions: [],
 			sickOptions: [],
@@ -548,14 +561,14 @@
 			},
 			//批量添加时最后确认添加
 			trueToAddRecipes() {
-				let cookIds=this.selectedID.join(',');
-				let param={
-					subjectId:subjectId,
-					cookIds:cookIds
+				let cookIds = this.selectedID.join(',');
+				let param = {
+					subjectId: subjectId,
+					cookIds: cookIds
 				}
-				addCookDetailBatch(param).then((resp)=>{
+				addCookDetailBatch(param).then((resp) => {
 					console.log(resp)
-				},err=>{
+				}, err => {
 					console.log(err)
 				})
 			},
@@ -626,7 +639,28 @@
 				this.getList();
 			},
 			handleFilter() {
+				this.listLoading = true;
+				let arr = this.$route.params.id.split("&");
+				this.colloctTemp.subjectId = arr[0];
+				subjectId = arr[0];
+				this.colloctTemp.name = arr[1];
+				let page = this.listQuery.page;
 
+				let data = this.listQuery;
+				data = JSON.parse(JSON.stringify(data));
+				for(const key in data) {
+					// 去除对象内多余的空值key
+					if(data[key] === null) {
+						delete data[key];
+					}
+				}
+				data.subjectId = arr[0];
+				data.page = page;
+				searchList(data).then(response => {
+					this.list = response.data.data;
+					this.total = response.data.total;
+					this.listLoading = false;
+				})
 			},
 			//添加食谱显示
 			handleCreateColl(isGood) {
@@ -657,11 +691,17 @@
 				this.colloctTemp.name = arr[1];
 				console.log(this.colloctTemp);
 				let page = this.listQuery.page;
-				let param = {
-					subjectId: arr[0],
-					page: page
+				let data = this.listQuery;
+				data = JSON.parse(JSON.stringify(data));
+				for(const key in data) {
+					// 去除对象内多余的空值key
+					if(data[key] === null) {
+						delete data[key];
+					}
 				}
-				searchList(param).then(response => {
+				data.subjectId = arr[0];
+				data.page = page;
+				searchList(data).then(response => {
 					this.list = response.data.data;
 					this.total = response.data.total;
 					this.listLoading = false;
