@@ -650,7 +650,7 @@
 				data = JSON.parse(JSON.stringify(data));
 				for(const key in data) {
 					// 去除对象内多余的空值key
-					if(data[key] === null) {
+					if(data[key] === null||!data[key]) {
 						delete data[key];
 					}
 				}
