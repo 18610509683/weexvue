@@ -699,11 +699,13 @@
       submitForm () {
         this.$refs["postForm"].validate(valid => {
           if (valid) {
-
-            let makeTimeArr = this.makeTime.split("-")
-            this.postForm.hours = parseInt(makeTimeArr[0])
-            this.postForm.minutes =  parseInt(makeTimeArr[1])
-            this.postForm.seconds = parseInt(makeTimeArr[2])
+            if (this.makeTime) {
+              let makeTimeArr = this.makeTime.split("-")
+              this.postForm.hours = parseInt(makeTimeArr[0])
+              this.postForm.minutes =  parseInt(makeTimeArr[1])
+              this.postForm.seconds = parseInt(makeTimeArr[2])
+            }
+            
 
             let tempSteps = []
             for (let index = 0; index < this.tempSteps.length; index++) {
