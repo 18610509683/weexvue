@@ -541,7 +541,8 @@ export const constantRoutes = [{
 					path: 'rights',
 					name: 'rights',
 					component: () =>
-						import('@/views/yunyingManager/user/rights'),
+//						import('@/views/yunyingManager/user/foodType'),
+						import('@/views/yunyingManager/user/foodType0'),
 					meta: {
 						title: '备用页面',
 						icon: 'eye'

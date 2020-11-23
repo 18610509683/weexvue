@@ -537,6 +537,9 @@
 				var self = this;
 				var data = this.cardEditInit = JSON.parse(JSON.stringify(itm));
 				this.value1 = [data.startTime, data.endTime];
+
+				var temp=itm.subjectName+'：ID '+itm.subjectId;
+				this.cardEditInit.subjectId=temp;
 				this.cardEditVisible = true;
 			},
 			toCreate() {
@@ -568,10 +571,16 @@
 			},
 			saveEdit() {
 				let data = this.cardEditInit;
+				var ind=data.subjectId.toString().indexOf('ID');
+				if(ind!=-1){
+					var temp=data.subjectId.substr(ind+2).trim();
+					this.cardEditInit.subjectId=temp;
+				}
 				data.startTime = this.value1[0];
 				data.endTime = this.value1[1];
 				delete data.statusMsg;
 				delete data.statusType;
+				delete data.subjectName;
 				console.log(data)
 				editCardPos(data).then(res => {
 					this.getList();
