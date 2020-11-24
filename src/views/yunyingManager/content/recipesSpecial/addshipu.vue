@@ -450,13 +450,10 @@
 
 		},
 		created() {
-
-			console.log(this.listQuery)
 			var self = this;
 			self.refreshList();
 
 			fetchAllTag().then(res => {
-				console.log(res)
 				//获取时令季节数据
 				this.seasonOptions = res.data[1];
 				//获取节日数据
@@ -567,7 +564,7 @@
 					cookIds: cookIds
 				}
 				addCookDetailBatch(param).then((resp) => {
-					console.log(resp)
+//					console.log(resp)
 				}, err => {
 					console.log(err)
 				})
@@ -689,7 +686,6 @@
 				this.colloctTemp.subjectId = arr[0];
 				subjectId = arr[0];
 				this.colloctTemp.name = arr[1];
-				console.log(this.colloctTemp);
 				let page = this.listQuery.page;
 				let data = this.listQuery;
 				data = JSON.parse(JSON.stringify(data));

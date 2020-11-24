@@ -8,7 +8,7 @@
 				<el-row>
 					<el-col class="filter-item" :xs="24" :sm="24" :lg="8" style="margin-right: 100px;">
 						<div class="filter-title">卡片名称：</div>
-						<el-input class="filter-input" size="medium" v-model="listQuery.name" placeholder="请输入关键字" style="min-width:300px;"></el-input>
+						<el-input class="filter-input" size="medium" v-model="listQuery.name" placeholder="请输入关键字" style="min-width:300px;" clearable></el-input>
 					</el-col>
 					<el-col class="filter-item" :xs="8" :sm="8" :lg="4">
 						<div class="filter-title">卡片类型：</div>
@@ -393,7 +393,6 @@
 					this.listQuery.startTime = val[0];
 					this.listQuery.endTime = val[1];
 				}
-				console.log(this.listQuery)
 			},
 			//滚动时加载更多
 			loadmore() {
@@ -516,7 +515,6 @@
 							id: id,
 							status: status
 						}
-						console.log(param)
 						stopCardPos(param).then(res => {
 							itm.status = status
 							this.$message({
@@ -581,7 +579,6 @@
 				delete data.statusMsg;
 				delete data.statusType;
 				delete data.subjectName;
-				console.log(data)
 				editCardPos(data).then(res => {
 					this.getList();
 					this.cardEditVisible = false;
@@ -600,7 +597,6 @@
 				}
 				getSubjectList(data).then(res => {
 					this.listData = res.data.data;
-					console.log(res.data.data)
 					this.total = res.data.total;
 				}, err => {
 					console.log(err)

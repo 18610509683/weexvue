@@ -28,7 +28,7 @@ service.interceptors.request.use(
 				...config.data,
 				token: getToken()
 			}
-			console.log(config.data)
+//			console.log(config.data)
 		}
 
 		// config.data = {
