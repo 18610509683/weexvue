@@ -451,17 +451,17 @@ export const constantRoutes = [{
 								},
 								hidden: true,
 							},
-							{
-								path: 'menu1-2-2',
-								component: () =>
-									import('@/views/yunyingManager/new_file'),
-								name: 'Menu1-2-2',
-								meta: {
-									title: '备用页面',
-									icon: 'eye'
-								},
-								hidden: false
-							}
+							// {
+							// 	path: 'menu1-2-2',
+							// 	component: () =>
+							// 		import('@/views/yunyingManager/new_file'),
+							// 	name: 'Menu1-2-2',
+							// 	meta: {
+							// 		title: '备用页面',
+							// 		icon: 'eye'
+							// 	},
+							// 	hidden: false
+							// }
 						]
 					},
 					//					{
@@ -567,7 +567,7 @@ export const constantRoutes = [{
 						import('@/views/yunyingManager/user/feedback'),
 					meta: {
 						title: '用户反馈',
-        icon: 'email'
+						icon: 'email'
 					}
 				}
 				// , {
