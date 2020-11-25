@@ -52,7 +52,7 @@
 						<el-button :type="getBtnType(itm.statusType)" style="border-radius: 0;" size="normal">{{getSatus(itm.statusType)}}</el-button>
 						<div class="btn-operate" @click="toEdit(itm)">编辑</div>
 						<div class="btn-operate" @click="toStop(itm,itm.id,itm.status)">{{itm.status==1?'停用':'启用'}}</div>
-						<div class="btn-operate" @click="toDel(itm.id)">删除</div>
+						<div v-if="itm.name!='热门食谱'" class="btn-operate" @click="toDel(itm.id)">删除</div>
 					</div>
 				</div>
 				<pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.page_size" @pagination="handleFilter" />

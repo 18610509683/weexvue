@@ -220,7 +220,7 @@
 					</el-col>
 				</div>
 
-				<el-table v-loading="listLoadingAll" :data="listAll" @sort-change="sortChange" border fit highlight-current-row ref="multipleTable" tooltip-effect="dark" @select-all="handleSelectionChange" @row-click="clickData">
+				<el-table v-loading="listLoadingAll" :data="listAll" @sort-change="sortChange" border fit highlight-current-row ref="multipleTable" tooltip-effect="dark" @select-all="handleSelectionChange" @row-click="clickData" @select="singleClick">
 					<el-table-column type="selection" width="55"></el-table-column>
 					<el-table-column label="食谱ID" align="center" prop="cookId"></el-table-column>
 					<el-table-column label="食谱名称" align="center" prop="name"></el-table-column>
@@ -401,7 +401,18 @@
 					name: "运营编辑"
 				}
 			],
-			sourceOptions: [],
+			sourceOptions: [{
+					val: 1,
+					name: "IOT"
+				},
+				{
+					val: 2,
+					name: "掌厨"
+				},
+				{
+					val: 3,
+					name: "运营编辑"
+				}],
 			seasonOptions: [],
 			festivalOptions: [],
 			peopleOptions: [],
@@ -454,6 +465,7 @@
 			self.refreshList();
 
 			fetchAllTag().then(res => {
+				console.log(res)
 				//获取时令季节数据
 				this.seasonOptions = res.data[1];
 				//获取节日数据
@@ -521,6 +533,16 @@
 					}
 				}
 			},
+			//单选事件
+			singleClick(selection, row) {
+				let selectedID = this.selectedID;
+				if(selectedID.indexOf(row.cookId) == -1) {
+					selectedID.push(row.cookId)
+				} else {
+					let index = selectedID.indexOf(row.cookId);
+					selectedID.splice(index, 1);
+				}
+			},
 			//批量添加时查询食谱
 			searchRecipes() {
 				this.listLoadingAll = true;
@@ -564,7 +586,7 @@
 					cookIds: cookIds
 				}
 				addCookDetailBatch(param).then((resp) => {
-//					console.log(resp)
+					//					console.log(resp)
 				}, err => {
 					console.log(err)
 				})
@@ -647,7 +669,7 @@
 				data = JSON.parse(JSON.stringify(data));
 				for(const key in data) {
 					// 去除对象内多余的空值key
-					if(data[key] === null||!data[key]) {
+					if(data[key] === null || !data[key]) {
 						delete data[key];
 					}
 				}
