@@ -161,7 +161,7 @@
 					</el-form>
 				</div>
 				<div slot="footer" class="dialog-footer">
-					<el-button @click="cancleCreate">取消</el-button>
+					<el-button @click="cancleEdit">取消</el-button>
 					<el-button type="primary" @click="saveEdit">保存</el-button>
 				</div>
 			</el-dialog>
@@ -352,7 +352,7 @@
 				}]
 			},
 			value2: '',
-			value0: '',
+			value0: [],
 			value1: [],
 		}),
 		computed: {
@@ -536,12 +536,15 @@
 				var data = this.cardEditInit = JSON.parse(JSON.stringify(itm));
 				this.value1 = [data.startTime, data.endTime];
 
-				var temp=itm.subjectName+'：ID '+itm.subjectId;
-				this.cardEditInit.subjectId=temp;
+				var temp = itm.subjectName + '：ID ' + itm.subjectId;
+				this.cardEditInit.subjectId = temp;
 				this.cardEditVisible = true;
 			},
 			toCreate() {
 				this.cardAddVisible = true;
+			},
+			cancleEdit() {
+				this.cardEditVisible = false;
 			},
 			cancleCreate() {
 				this.cardAddVisible = false;
@@ -549,7 +552,8 @@
 			saveCreate() {
 				let data = this.listQueryAdd;
 				let arr = this.value0;
-				if(arr) {
+				data=JSON.parse(JSON.stringify(data))
+				if(arr.length!=0) {
 					data.startTime = arr[0];
 					data.endTime = arr[1];
 				} else {
@@ -569,10 +573,10 @@
 			},
 			saveEdit() {
 				let data = this.cardEditInit;
-				var ind=data.subjectId.toString().indexOf('ID');
-				if(ind!=-1){
-					var temp=data.subjectId.substr(ind+2).trim();
-					this.cardEditInit.subjectId=temp;
+				var ind = data.subjectId.toString().indexOf('ID');
+				if(ind != -1) {
+					var temp = data.subjectId.substr(ind + 2).trim();
+					this.cardEditInit.subjectId = temp;
 				}
 				data.startTime = this.value1[0];
 				data.endTime = this.value1[1];

@@ -274,7 +274,8 @@
 		searchList,
 		getValidRecipe,
 		addSpecialRecipe,
-		addCookDetailBatch
+		addCookDetailBatch,
+		delCookDetail
 	} from "@/api/recipesConfig.js";
 	import { getToken } from "@/utils/auth";
 	import Sticky from "@/components/Sticky"; // 粘性header组件
@@ -412,7 +413,8 @@
 				{
 					val: 3,
 					name: "运营编辑"
-				}],
+				}
+			],
 			seasonOptions: [],
 			festivalOptions: [],
 			peopleOptions: [],
@@ -465,7 +467,7 @@
 			self.refreshList();
 
 			fetchAllTag().then(res => {
-				console.log(res)
+				//				console.log(res)
 				//获取时令季节数据
 				this.seasonOptions = res.data[1];
 				//获取节日数据
@@ -489,6 +491,30 @@
 			});
 		},
 		methods: {
+			//删除专题食谱
+			handleDelete(row) {
+				console.log(row)
+				let param = {
+					subjectId: subjectId,
+					cookId: row.cookId
+				}
+				delCookDetail(param).then(res => {
+					if(res.code == 0) {
+						this.$message({
+							type: "success",
+							message: '删除成功',
+							duration: 2000
+						});
+					}
+					this.handleFilter()
+				}, err => {
+					this.$message({
+						type: "success",
+						message: '删除失败'+err,
+						duration: 2000
+					});
+				})
+			},
 			//select值变化时
 			//兼更新当页列表食谱选中状态
 			valueChanged(val) {
@@ -586,9 +612,22 @@
 					cookIds: cookIds
 				}
 				addCookDetailBatch(param).then((resp) => {
-					//					console.log(resp)
+					if(resp.exist != '') {
+						this.$message({
+							type: "success",
+							message: '添加成功，' + resp.exist + '原本已在专题中',
+							duration: 5000
+						});
+					}
+					this.refreshList();
+					this.batchAddVisible = false;
 				}, err => {
-					console.log(err)
+					this.$message({
+						type: "success",
+						message: err,
+						duration: 2000
+					});
+					this.batchAddVisible = false;
 				})
 			},
 			//单项添加时确定点击
@@ -657,6 +696,7 @@
 				this.listQuery.page = 1;
 				this.getList();
 			},
+			//查询专题内食谱
 			handleFilter() {
 				this.listLoading = true;
 				let arr = this.$route.params.id.split("&");
@@ -669,10 +709,11 @@
 				data = JSON.parse(JSON.stringify(data));
 				for(const key in data) {
 					// 去除对象内多余的空值key
-					if(data[key] === null || !data[key]) {
+					if(!data[key] && data[key] != 0) {
 						delete data[key];
 					}
 				}
+				console.log(data)
 				data.subjectId = arr[0];
 				data.page = page;
 				searchList(data).then(response => {

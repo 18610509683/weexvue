@@ -31,17 +31,17 @@
 				<el-row style="margin-top: 60px;">
 					<el-col class="filter-item" :xs="12" :sm="8" :lg="6">
 						<div class="filter-title">专题名称：</div>
-						<el-input class="filter-input" size="small" v-model="listQuery.name" placeholder="食谱名称"></el-input>
+						<el-input class="filter-input" size="small" v-model="listQuery.name" placeholder="请输入专题名称" clearable></el-input>
 					</el-col>
 					<el-col class="filter-item" :xs="12" :sm="8" :lg="6">
 						<div class="filter-title">来源：</div>
-						<el-select class="filter-input" size="small" v-model="listQuery.source" placeholder="来源" clearable>
+						<el-select class="filter-input" size="small" v-model="listQuery.source" placeholder="请选择来源" clearable>
 							<el-option v-for="(item,index) in sourceOptions" :key="index" :label="item.name" :value="item.val"></el-option>
 						</el-select>
 					</el-col>
 					<el-col class="filter-item" :xs="12" :sm="8" :lg="6">
 						<div class="filter-title">状态：</div>
-						<el-select class="filter-input" size="small" v-model="listQuery.status" placeholder="状态" clearable>
+						<el-select class="filter-input" size="small" v-model="listQuery.status" placeholder="请选择状态" clearable>
 							<el-option v-for="(item,index) in statusOptions" :key="index" :label="item.name" :value="item.val"></el-option>
 						</el-select>
 					</el-col>
@@ -49,7 +49,7 @@
 					<el-col class="filter-item" :xs="12" :sm="8" :lg="6">
 						<el-button style="margin:0 4px;width:80px" size="small" type="primary" icon="el-icon-search" @click="handleFilter">查询</el-button>
 						<el-button style="margin:0 4px;width:80px" size="small" type="success" @click="handleCreateColl(true)">添加专题</el-button>
-						<el-button style=" margin:0 6px; " size="small " type="warning " @click="handleFilter ">掌厨导入</el-button>
+						<!--<el-button style=" margin:0 6px; " size="small " type="warning " @click="handleFilter ">掌厨导入</el-button>-->
 					</el-col>
 
 				</el-row>
@@ -225,7 +225,7 @@
 					name: "上架"
 				},
 				{
-					val: 2,
+					val: 0,
 					name: "下架"
 				}
 			],
@@ -436,15 +436,16 @@
 			},
 			getList() {
 				this.listLoading = true;
-
-				for(const key in this.listQuery) {
+				let param=JSON.parse(JSON.stringify(this.listQuery))
+				for(const key in param) {
+					let val=param[key];
 					// 去除对象内多余的空值key
-					if(this.listQuery[key] === null) {
-						delete this.listQuery[key];
+					if(!val&&val!=0) {
+						delete param[key];
 					}
 				}
-
-				fetchRecipesList(this.listQuery).then(response => {
+				console.log(param)
+				fetchRecipesList(param).then(response => {
 					this.total = response.data.total;
 					this.list = response.data.data;
 					let data = this.list;
