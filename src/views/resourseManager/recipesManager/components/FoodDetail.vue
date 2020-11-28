@@ -883,8 +883,8 @@ export default {
             }
             tempSteps.push(element)
           }
-
           this.postForm.step = tempSteps
+          
 
           // tags赋值
           // debugger
@@ -1001,7 +1001,7 @@ export default {
               this.postForm.videoUrl = tmpVideoArr
             }
 
-            this.postForm.step = this.tempSteps
+            // this.postForm.step = this.tempSteps
           } else {
             this.postForm.id = '0'
             this.postForm.season = this.seasonArr
@@ -1018,7 +1018,7 @@ export default {
             this.postForm.cookStyle = this.cookStyleArr
             this.postForm.device = this.deviceArr
             this.postForm.category = this.recipesCGArr
-            this.postForm.step = this.tempSteps
+            // this.postForm.step = this.tempSteps
             this.postForm.cookPattern = this.cookPatternArr
             this.postForm.occupation = this.occupationArr
             this.postForm.videoUrl = this.uploadVideoList.map(function(v) { return v.name })
