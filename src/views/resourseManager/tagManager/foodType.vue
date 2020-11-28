@@ -411,7 +411,6 @@
 				let a = this.cascaderOptions;
 				return new Promise(function(resolve, reject) {
 					getAllFoodCategoryTree().then(res => {
-						console.log(res.data)
 						self.cascaderOptions = res.data;
 						self.listLoading = false;
 						navData = res.data;
@@ -430,7 +429,6 @@
 			//添加、编辑菜单选择事件
 			changeCascader2(valArr) {
 				var val = valArr.slice();
-				console.log(val)
 			},
 			//table懒加载
 			tableLazyLoad(tree, treeNode,resolve) {
@@ -450,7 +448,7 @@
 				});
 			},
 			openDetails(row) {
-				console.log(row)
+//				console.log(row)
 			},
 			//刷新页面数据
 			refreshList() {
@@ -489,7 +487,6 @@
 			//重置缓存
 			resetTemp() {
 				let temp = this.dialogStatus == 'create' ? 3 : null;
-				console.log(temp)
 				this.temp = {
 					id: null,
 					name: null,
@@ -539,7 +536,6 @@
 								delete tempData[key]
 							}
 						}
-						console.log(tempData)
 						addFoodType(tempData).then(() => {
 							this.dialogFormVisible = false
 							parents={}
@@ -687,7 +683,6 @@
 			},
 			//上传成功
 			uploadImgSuccess(response, file, fileList) {
-				console.log(response);
 				if(fileList.length > 0) {
 					this.temp.image = response.data.all_img_url;
 					//移除必填的提醒

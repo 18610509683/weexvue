@@ -178,7 +178,6 @@
 		watch: {
 			'editProps.name': {
 				handler: function(val, oldval) {
-					console.log(this.editProps)
 					this.colloctTemp = this.editProps;
 					if(this.colloctTemp.image) {
 						this.uploadImgList = [{
@@ -226,10 +225,8 @@
 						delete param.createTime;
 						delete param.updateTime;
 						delete param.cookCount;
-						console.log(param)
 						editRecipes(param).then((res) => {
 							self.$emit('closed', 1);
-							console.log(res)
 						}, (err) => {
 							console.log(err)
 							self.$emit('closed', 0);
@@ -242,7 +239,7 @@
 				this.dialogVisible = true;
 			},
 			handleLimit(file, fileList) {
-				console.log(fileList)
+//				console.log(fileList)
 			},
 			handleRemove(file, fileList) {
 				this.uploadDisabled = false;

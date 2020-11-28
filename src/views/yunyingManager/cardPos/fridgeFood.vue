@@ -8,7 +8,7 @@
 				<el-row>
 					<el-col class="filter-item" :xs="24" :sm="24" :lg="8" style="margin-right: 100px;">
 						<div class="filter-title">卡片名称：</div>
-						<el-input class="filter-input" size="medium" v-model="listQuery.name" placeholder="请输入关键字" style="min-width:300px;"></el-input>
+						<el-input class="filter-input" size="medium" v-model="listQuery.name" placeholder="请输入关键字" style="min-width:300px;" clearable></el-input>
 					</el-col>
 					<el-col class="filter-item" :xs="8" :sm="8" :lg="4">
 						<div class="filter-title">卡片类型：</div>
@@ -52,7 +52,7 @@
 						<el-button :type="getBtnType(itm.statusType)" style="border-radius: 0;" size="normal">{{getSatus(itm.statusType)}}</el-button>
 						<div class="btn-operate" @click="toEdit(itm)">编辑</div>
 						<div class="btn-operate" @click="toStop(itm,itm.id,itm.status)">{{itm.status==1?'停用':'启用'}}</div>
-						<div class="btn-operate" @click="toDel(itm.id)">删除</div>
+						<div v-if="itm.name!='热门食谱'" class="btn-operate" @click="toDel(itm.id)">删除</div>
 					</div>
 				</div>
 				<pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.page_size" @pagination="handleFilter" />
@@ -161,7 +161,7 @@
 					</el-form>
 				</div>
 				<div slot="footer" class="dialog-footer">
-					<el-button @click="cancleCreate">取消</el-button>
+					<el-button @click="cancleEdit">取消</el-button>
 					<el-button type="primary" @click="saveEdit">保存</el-button>
 				</div>
 			</el-dialog>
@@ -352,7 +352,7 @@
 				}]
 			},
 			value2: '',
-			value0: '',
+			value0: [],
 			value1: [],
 		}),
 		computed: {
@@ -393,7 +393,6 @@
 					this.listQuery.startTime = val[0];
 					this.listQuery.endTime = val[1];
 				}
-				console.log(this.listQuery)
 			},
 			//滚动时加载更多
 			loadmore() {
@@ -516,7 +515,6 @@
 							id: id,
 							status: status
 						}
-						console.log(param)
 						stopCardPos(param).then(res => {
 							itm.status = status
 							this.$message({
@@ -538,12 +536,15 @@
 				var data = this.cardEditInit = JSON.parse(JSON.stringify(itm));
 				this.value1 = [data.startTime, data.endTime];
 
-				var temp=itm.subjectName+'：ID '+itm.subjectId;
-				this.cardEditInit.subjectId=temp;
+				var temp = itm.subjectName + '：ID ' + itm.subjectId;
+				this.cardEditInit.subjectId = temp;
 				this.cardEditVisible = true;
 			},
 			toCreate() {
 				this.cardAddVisible = true;
+			},
+			cancleEdit() {
+				this.cardEditVisible = false;
 			},
 			cancleCreate() {
 				this.cardAddVisible = false;
@@ -551,7 +552,8 @@
 			saveCreate() {
 				let data = this.listQueryAdd;
 				let arr = this.value0;
-				if(arr) {
+				data=JSON.parse(JSON.stringify(data))
+				if(arr.length!=0) {
 					data.startTime = arr[0];
 					data.endTime = arr[1];
 				} else {
@@ -571,17 +573,16 @@
 			},
 			saveEdit() {
 				let data = this.cardEditInit;
-				var ind=data.subjectId.toString().indexOf('ID');
-				if(ind!=-1){
-					var temp=data.subjectId.substr(ind+2).trim();
-					this.cardEditInit.subjectId=temp;
+				var ind = data.subjectId.toString().indexOf('ID');
+				if(ind != -1) {
+					var temp = data.subjectId.substr(ind + 2).trim();
+					this.cardEditInit.subjectId = temp;
 				}
 				data.startTime = this.value1[0];
 				data.endTime = this.value1[1];
 				delete data.statusMsg;
 				delete data.statusType;
 				delete data.subjectName;
-				console.log(data)
 				editCardPos(data).then(res => {
 					this.getList();
 					this.cardEditVisible = false;
@@ -600,7 +601,6 @@
 				}
 				getSubjectList(data).then(res => {
 					this.listData = res.data.data;
-					console.log(res.data.data)
 					this.total = res.data.total;
 				}, err => {
 					console.log(err)

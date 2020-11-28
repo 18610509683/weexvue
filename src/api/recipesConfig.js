@@ -111,3 +111,11 @@ export function addCookDetailBatch(data){
     data
   })	
 }
+/*删除专题食谱*/
+export function delCookDetail(data){
+  return request({
+    url: modelHeader+'/RecipeSubject/delCookDetail',
+    method: 'post',
+    data
+  })		
+}

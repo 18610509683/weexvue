@@ -40,7 +40,7 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label-width="120px" label="来源:" class="postInfo-container-item" prop="source">
-                    <el-select v-model="postForm.source" placeholder="请选择来源">
+                    <el-select v-model="postForm.source" placeholder="请选择来源" disabled>
                       <el-option
                         v-for="(item,index) in sourceOptions"
                         :key="index"
@@ -559,7 +559,7 @@ const defaultForm = {
   thirdId: null, // 第三方id
   thirdNo: null, // 第三方食谱编码
   difficultyLevel: null, // 烹饪难度
-  source: null, // 来源
+  source: 3, // 来源
   cookType: null, // 智能食谱类型
   isHasVideo: null, // 是否有视频
   videoUrl: null, // 视频地址

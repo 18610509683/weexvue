@@ -40,7 +40,7 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label-width="100px" label="来源:" class="postInfo-container-item" prop="source" >
-                    <el-select v-model="postForm.source" placeholder="请选择来源">
+                    <el-select v-model="postForm.source" placeholder="请选择来源" disabled>
                       <el-option  v-for="(item,index) in sourceOptions" :key="index" :label="item.name" :value="item.value" />
                     </el-select>
                   </el-form-item>
@@ -436,7 +436,7 @@ const defaultForm = {
   name: "", //食材名称
   image: null, //食材图片
   categoryId: null, //食材分类
-  source: null, //食材来源（1 掌厨 2 运营编辑）
+  source: 3, //食材来源（1 掌厨 2 运营编辑）
 
   aliasName: "", //食材别名
   cookTipsDesc: "", //烹饪指南

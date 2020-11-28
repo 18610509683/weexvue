@@ -451,17 +451,17 @@ export const constantRoutes = [{
 								},
 								hidden: true,
 							},
-							{
-								path: 'menu1-2-2',
-								component: () =>
-									import('@/views/yunyingManager/new_file'),
-								name: 'Menu1-2-2',
-								meta: {
-									title: '备用页面',
-									icon: 'eye'
-								},
-								hidden: false
-							}
+							// {
+							// 	path: 'menu1-2-2',
+							// 	component: () =>
+							// 		import('@/views/yunyingManager/new_file'),
+							// 	name: 'Menu1-2-2',
+							// 	meta: {
+							// 		title: '备用页面',
+							// 		icon: 'eye'
+							// 	},
+							// 	hidden: false
+							// }
 						]
 					},
 					//					{
@@ -537,17 +537,19 @@ export const constantRoutes = [{
 						title: '冰箱插件-饮食页',
 						icon: 'eye-open'
 					}
-				}, {
-					path: 'rights',
-					name: 'rights',
-					component: () =>
-//						import('@/views/yunyingManager/user/foodType'),
-						import('@/views/yunyingManager/user/foodType0'),
-					meta: {
-						title: '备用页面',
-						icon: 'eye'
-					}
-				}]
+				}
+// 				, {
+// 					path: 'rights',
+// 					name: 'rights',
+// 					component: () =>
+// //						import('@/views/yunyingManager/user/foodType'),
+// 						import('@/views/yunyingManager/user/foodType0'),
+// 					meta: {
+// 						title: '备用页面',
+// 						icon: 'eye'
+// 					}
+// 				}
+				]
 			},
 			{
 				path: 'user',
@@ -567,16 +569,18 @@ export const constantRoutes = [{
 						title: '用户反馈',
 						icon: 'email'
 					}
-				}, {
-					path: 'rights',
-					name: 'rights',
-					component: () =>
-						import('@/views/yunyingManager/user/rights'),
-					meta: {
-						title: '权限管理',
-						icon: 'form'
-					}
-				}]
+				}
+				// , {
+				// 	path: 'rights',
+				// 	name: 'rights',
+				// 	component: () =>
+				// 		import('@/views/yunyingManager/user/rights'),
+				// 	meta: {
+				// 		title: '权限管理',
+				// 		icon: 'form'
+				// 	}
+				// }
+				]
 			},
 		]
 	},
