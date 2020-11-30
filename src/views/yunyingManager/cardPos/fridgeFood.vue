@@ -117,7 +117,8 @@
 					<el-form ref="colloctForm" :rules="subRules" :model="cardEditInit" label-position="left" label-width="100px">
 						<div class="card-box">
 							<el-form-item label="卡片名称" prop="name">
-								<el-input v-model="cardEditInit.name" placeholder="请输入卡片名称" class="card-input" clearable/>
+								<el-input v-if="cardEditInit.name=='热门食谱'" v-model="cardEditInit.name" placeholder="请输入卡片名称" class="card-input" clearable disabled/>
+								<el-input v-else v-model="cardEditInit.name" placeholder="请输入卡片名称" class="card-input" clearable/>
 							</el-form-item>
 							<el-form-item label="所属展位" prop="position">
 								<el-select class="selected-input" v-model="cardEditInit.position" placeholder="请选择展示位置" clearable value-key="name">
