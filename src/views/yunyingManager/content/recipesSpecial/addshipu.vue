@@ -44,7 +44,7 @@
 				</el-row>
 			</div>
 
-			<el-table v-loading="listLoading " :data="list " @sort-change="sortChange " border fit highlight-current-row style="width: 100%; ">
+			<el-table ref="dragTable" row-key="cookId" v-loading="listLoading " :data="list " @sort-change="sortChange " border fit highlight-current-row style="width: 100%; ">
 				<el-table-column label="食谱id" align="center " prop="cookId ">
 					<template slot-scope="scope ">
 						<span>{{scope.row.cookId}}</span>
@@ -280,6 +280,8 @@
 	import { getToken } from "@/utils/auth";
 	import Sticky from "@/components/Sticky"; // 粘性header组件
 	import Pagination from "@/components/Pagination";
+	import Sortable from 'sortablejs'
+
 	var index = 1;
 	var savedText = undefined;
 	//控制已无多余数据的查询
@@ -450,7 +452,8 @@
 			colloctTemp: {
 				subjectId: null,
 				name: "",
-				sorts: 1
+				sorts: null,
+				cookId: null
 			},
 		}),
 		computed: {
@@ -490,7 +493,23 @@
 				this.deviceOptions = res.data[10];
 			});
 		},
+		mounted() {
+			this.setSort();
+		},
 		methods: {
+			setSort() {
+				const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+				this.sortable = Sortable.create(el, {
+//					ghostClass: 'sortable-ghost',
+//					setData: function(dataTransfer) {
+//						dataTransfer.setData('Text', '')
+//					},
+//					onEnd: evt => {
+//						const targetRow = this.list.splice(evt.oldIndex, 1)[0];
+//						this.list.splice(evt.newIndex, 0, targetRow);
+//					}
+				})
+			},
 			//删除专题食谱
 			handleDelete(row) {
 				console.log(row)
@@ -510,7 +529,7 @@
 				}, err => {
 					this.$message({
 						type: "success",
-						message: '删除失败'+err,
+						message: '删除失败' + err,
 						duration: 2000
 					});
 				})
@@ -729,10 +748,33 @@
 				this.dialogCollectVisible = true;
 				this.$nextTick(() => {
 					this.$refs["colloctForm"].clearValidate();
+					this.validList = [];
+					delete this.colloctTemp.sorts;
+					delete this.colloctTemp.cookId;
 				});
 			},
 			//批量添加显示
 			showBatchAdd() {
+				this.listQueryAll = {
+					cookId: null, //食谱id
+					name: null, //名称
+					status: null, //状态
+					isHasVideo: null, //是否有视频
+					source: null, //来源
+					season: null, //时令
+					festival: null, //节日
+					device: null, //设备品类
+					effect: null, //功效
+					suitablePeople: null, //适应人群
+					suitableSick: null, //适宜疾病
+					suitablePhysiology: null, //适宜阶段
+					page: 1,
+					page_size: 10
+				}
+				this.listAll = [];
+				this.totalAll = 0;
+				this.selectedID=[];
+				this.selectedOptions=[];
 				this.batchAddVisible = true;
 			},
 			//跳转创建编辑页面
@@ -740,6 +782,7 @@
 				if(id) {
 					this.$router.push("/resourse/recipes/edit/" + id);
 				} else {
+
 					this.$router.push("/resourse/recipes/create");
 				}
 			},

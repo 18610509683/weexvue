@@ -63,7 +63,7 @@
 					<el-form ref="colloctForm" :rules="subRules" :model="listQueryAdd" label-position="left" label-width="100px">
 						<div class="card-box">
 							<el-form-item label="卡片名称" prop="name">
-								<el-input v-model="listQueryAdd.name" placeholder="请输入卡片名称" class="card-input" />
+								<el-input v-model="listQueryAdd.name" placeholder="请输入卡片名称" class="card-input" clearable/>
 							</el-form-item>
 							<el-form-item label="所属展位" prop="position">
 								<el-select class="selected-input" v-model="listQueryAdd.position" placeholder="请选择展示位置" clearable value-key="name">
@@ -81,7 +81,7 @@
 								</el-select>
 							</el-form-item>
 							<el-form-item label="内容名称" prop="subjectId">
-								<el-select v-model="listQueryAdd.subjectId" filterable remote placeholder="请输入内容名称" v-loadmore="loadmore" :remote-method="searchText" :loading="loading">
+								<el-select v-model="listQueryAdd.subjectId" filterable remote placeholder="请输入内容名称" v-loadmore="loadmore" :remote-method="searchText" :loading="loading" clearable>
 									<el-option v-for="(item,index) in validList" :key="index" :label="item.name" :value="item.value" />
 								</el-select>
 							</el-form-item>
@@ -117,7 +117,7 @@
 					<el-form ref="colloctForm" :rules="subRules" :model="cardEditInit" label-position="left" label-width="100px">
 						<div class="card-box">
 							<el-form-item label="卡片名称" prop="name">
-								<el-input v-model="cardEditInit.name" placeholder="请输入卡片名称" class="card-input" />
+								<el-input v-model="cardEditInit.name" placeholder="请输入卡片名称" class="card-input" clearable/>
 							</el-form-item>
 							<el-form-item label="所属展位" prop="position">
 								<el-select class="selected-input" v-model="cardEditInit.position" placeholder="请选择展示位置" clearable value-key="name">
@@ -135,7 +135,7 @@
 								</el-select>
 							</el-form-item>
 							<el-form-item label="内容名称" prop="subjectId">
-								<el-select v-model="cardEditInit.subjectId" filterable remote placeholder="请输入内容名称" v-loadmore="loadmore" :remote-method="searchText" :loading="loading">
+								<el-select v-model="cardEditInit.subjectId" filterable remote placeholder="请输入内容名称" v-loadmore="loadmore" :remote-method="searchText" :loading="loading" clearable>
 									<el-option v-for="(item,index) in validList" :key="index" :label="item.name" :value="item.value" />
 								</el-select>
 							</el-form-item>
@@ -541,6 +541,18 @@
 				this.cardEditVisible = true;
 			},
 			toCreate() {
+				this.listQueryAdd = {
+					name: null,
+					position: 1,
+					listType: 1,
+					subjectType: 1,
+					subjectId: null,
+					listStyle: 1,
+					startTime: null,
+					endTime: null,
+					sorts: 1,
+				};
+				this.validList = []
 				this.cardAddVisible = true;
 			},
 			cancleEdit() {
@@ -552,8 +564,8 @@
 			saveCreate() {
 				let data = this.listQueryAdd;
 				let arr = this.value0;
-				data=JSON.parse(JSON.stringify(data))
-				if(arr.length!=0) {
+				data = JSON.parse(JSON.stringify(data))
+				if(arr !== null && arr.length != 0) {
 					data.startTime = arr[0];
 					data.endTime = arr[1];
 				} else {
@@ -574,15 +586,28 @@
 			saveEdit() {
 				let data = this.cardEditInit;
 				var ind = data.subjectId.toString().indexOf('ID');
+				let arr = this.value1;
 				if(ind != -1) {
 					var temp = data.subjectId.substr(ind + 2).trim();
 					this.cardEditInit.subjectId = temp;
 				}
-				data.startTime = this.value1[0];
-				data.endTime = this.value1[1];
+				data = JSON.parse(JSON.stringify(data))
+				if(arr !== null && arr.length != 0) {
+					data.startTime = arr[0];
+					data.endTime = arr[1];
+				} else {
+					//					delete data.startTime;
+					//					delete data.endTime
+					data.startTime = ''
+					data.endTime = ''
+				}
+				//console.log(data);return;
 				delete data.statusMsg;
 				delete data.statusType;
 				delete data.subjectName;
+				delete data.updateTime;
+				delete data.createTime
+				console.log(data)
 				editCardPos(data).then(res => {
 					this.getList();
 					this.cardEditVisible = false;

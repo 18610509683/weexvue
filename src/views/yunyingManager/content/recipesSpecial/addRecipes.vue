@@ -55,7 +55,7 @@
 			</el-dialog>
 			<el-dialog :visible.sync="dialogVisible2">
 				<img width="100%" :src="dialogImageUrl2" alt="">
-			</el-dialog>			
+			</el-dialog>
 		</el-card>
 	</div>
 </template>
@@ -72,7 +72,7 @@
 			dialogImageUrl: '',
 			dialogImageUrl2: '',
 			dialogVisible: false,
-			dialogVisible2:false,
+			dialogVisible2: false,
 			colloctTemp: {
 				sorts: "",
 				source: 3,
@@ -121,6 +121,28 @@
 				return param;
 			},
 		},
+		watch: {
+			isShow: {
+				handler: function(nv, ov) {
+					console.log(nv)
+					this.colloctTemp = {
+						sorts: "",
+						source: 3,
+						status: 0,
+						name: "",
+						type: 1,
+						introduction: "",
+						description: "",
+						image: "",
+						infoImage: ""
+					}
+					this.$nextTick(() => {
+						this.$refs["colloctForm"].clearValidate();
+					});
+				},
+				immediate: false
+			}
+		},
 		methods: {
 			createCollect() {
 				var self = this;
@@ -142,7 +164,7 @@
 			handlePictureCardPreview2(file) {
 				this.dialogImageUrl2 = file.url;
 				this.dialogVisible2 = true;
-			},			
+			},
 			//			handleLimit(file, fileList) {
 			//				alert(2)
 			////				if(allowUpload) {

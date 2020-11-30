@@ -82,7 +82,7 @@
 						<span>{{scope.row.type | contentType}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="内容数量 " align="center " prop="cookCount " :show-overflow-tooltip=true sortable width="120">
+				<el-table-column label="内容数量 " align="center " prop="cookCount" :show-overflow-tooltip=true sortable width="120">
 					<template slot-scope="scope ">
 						<span>{{scope.row.cookCount}}</span>
 					</template>
@@ -115,7 +115,7 @@
 			</el-table>
 
 			<pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.page_size" @pagination="getList" />
-			<add :isShow="isShow" @closed="closed"></add>
+			<add ref="addPage" :isShow="isShow" @closed="closed"></add>
 			<edit :isShow="isShowEdit" :editProps="editProps" @closed="closedEdit"></edit>
 
 		</el-card>
@@ -444,7 +444,6 @@
 						delete param[key];
 					}
 				}
-				console.log(param)
 				fetchRecipesList(param).then(response => {
 					this.total = response.data.total;
 					this.list = response.data.data;
