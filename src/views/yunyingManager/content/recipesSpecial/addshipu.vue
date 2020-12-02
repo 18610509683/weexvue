@@ -135,7 +135,7 @@
 			<el-dialog custom-class="p-dialog" title="编辑食谱排序" :visible.sync="dialogEditVisible">
 				<el-form ref="colloctForm" :rules="subRules2" :model="colloctTemp2" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
 					<el-form-item label="专题名称" prop="name">
-						<el-autocomplete v-model="colloctTemp2.name" :fetch-suggestions="fetchAllFood" placeholder="请输入食材名称或别名进行搜索" @select="handleSelect" style="width: 300px;" disabled></el-autocomplete>
+						<el-autocomplete v-model="colloctTemp2.name" :fetch-suggestions="fetchAllFood" placeholder="请输入专题名称" @select="handleSelect" style="width: 300px;" disabled></el-autocomplete>
 					</el-form-item>
 					<el-form-item label="食谱名称" prop="cookName">
 						<el-input v-model="colloctTemp2.cookName" type="text" disabled></el-input>
@@ -472,6 +472,11 @@
 					required: false,
 					message: "请输入功效",
 					trigger: "blur"
+				}],
+				sorts:[{
+					required: true,
+					message: "请输入排序值",
+					trigger: "blur"					
 				}]
 			},
 			subRules2: {
@@ -487,7 +492,7 @@
 			colloctTemp: {
 				subjectId: null,
 				name: "",
-				sorts: null,
+				sorts: 1,
 				cookId: null
 			},
 			colloctTemp2: {
@@ -804,7 +809,7 @@
 				this.$nextTick(() => {
 					this.$refs["colloctForm"].clearValidate();
 					this.validList = [];
-					delete this.colloctTemp.sorts;
+					this.colloctTemp.sorts=1;
 					delete this.colloctTemp.cookId;
 				});
 			},
