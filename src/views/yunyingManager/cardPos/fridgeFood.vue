@@ -639,6 +639,7 @@
 						delete data[k]
 					}
 				}
+				console.log(data)
 				this.getList(data)
 			},
 			navClicked(index) {

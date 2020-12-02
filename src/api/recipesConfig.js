@@ -119,3 +119,11 @@ export function delCookDetail(data){
     data
   })		
 }
+/*编辑专题食谱排序*/
+export function editCookSorts(data){
+  return request({
+    url: modelHeader+'/RecipeSubject/updateCookDetail',
+    method: 'post',
+    data
+  })		
+}

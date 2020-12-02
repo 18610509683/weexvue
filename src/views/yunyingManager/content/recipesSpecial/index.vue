@@ -56,12 +56,12 @@
 			</div>
 
 			<el-table v-loading="listLoading " :data="list " @sort-change="sortChange " border fit highlight-current-row style="width: 100%; ">
-				<el-table-column label="序号" align="center " prop="cookId " sortable>
+				<el-table-column label="序号" align="center " prop="cookId ">
 					<template slot-scope="scope ">
 						<span>{{scope.row.id}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="专题名称 " align="center " prop="name " sortable width="120">
+				<el-table-column label="专题名称 " align="center " prop="name " width="120">
 					<template slot-scope="scope ">
 						<span>{{scope.row.name}}</span>
 					</template>
@@ -82,7 +82,7 @@
 						<span>{{scope.row.type | contentType}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="内容数量 " align="center " prop="cookCount" :show-overflow-tooltip=true sortable width="120">
+				<el-table-column label="内容数量 " align="center " prop="cookCount" :show-overflow-tooltip=true width="120">
 					<template slot-scope="scope ">
 						<span>{{scope.row.cookCount}}</span>
 					</template>
@@ -314,13 +314,7 @@
 						deleteRecipes({
 							id: row.id
 						}).then(() => {
-							for(const v of this.list) {
-								if(v.id === row.id) {
-									const index = this.list.indexOf(v);
-									this.list.splice(index, 1);
-									break;
-								}
-							}
+							this.getList();
 							this.$message({
 								type: "success",
 								message: "删除成功!"

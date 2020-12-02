@@ -71,6 +71,11 @@
 						<span>{{scope.row.device}}</span>
 					</template>
 				</el-table-column>
+				<el-table-column label="排序 " align="center " prop="sorts " :show-overflow-tooltip=true sortable>
+					<template slot-scope="scope ">
+						<span>{{scope.row.sorts}}</span>
+					</template>
+				</el-table-column>
 				<el-table-column label="时令" align="center" :show-overflow-tooltip=true>
 					<template slot-scope="scope">
 						<span>{{scope.row.season}}</span>
@@ -108,9 +113,10 @@
 				</el-table-column>
 				<!--<el-table-column width="100px" label="创建时间" align="center" prop="createTime"></el-table-column>
 				<el-table-column width="100px" label="更新时间" align="center" prop="updateTime"></el-table-column>-->
-				<el-table-column label="操作 " align="center " width="180 " class-name="small-padding fixed-width ">
+				<el-table-column label="操作 " align="center " width="240 " class-name="small-padding fixed-width ">
 					<template slot-scope="{row} ">
-						<el-button type="primary " size="mini " @click="toCreate(row.cookId) ">查看</el-button>
+						<el-button type="success " size="mini " @click="toCreate(row.cookId) ">查看</el-button>
+						<el-button type="primary " size="mini " @click="toEdit(row)">编辑</el-button>
 						<!--<el-button v-if="row.status !==1 " type="success " size="mini " @click="changeStatus(row) ">上架
 						</el-button>
 						<el-button v-else type="info " size="mini " @click="changeStatus(row) ">下架
@@ -126,6 +132,26 @@
 			</sticky>-->
 			<pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.page_size" @pagination="getList" />
 
+			<el-dialog custom-class="p-dialog" title="编辑食谱排序" :visible.sync="dialogEditVisible">
+				<el-form ref="colloctForm" :rules="subRules2" :model="colloctTemp2" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+					<el-form-item label="专题名称" prop="name">
+						<el-autocomplete v-model="colloctTemp2.name" :fetch-suggestions="fetchAllFood" placeholder="请输入食材名称或别名进行搜索" @select="handleSelect" style="width: 300px;" disabled></el-autocomplete>
+					</el-form-item>
+					<el-form-item label="食谱名称" prop="cookName">
+						<el-input v-model="colloctTemp2.cookName" type="text" disabled></el-input>
+						<!--<el-select v-model="colloctTemp.cookId" filterable remote placeholder="请输入文字" v-loadmore="loadmore" :remote-method="searchText" style="width:300px" :loading="loading" disabled>
+							<el-option v-for="(item,index) in validList" :key="index" :label="item.name" :value="item.value" />
+						</el-select>-->
+					</el-form-item>
+					<el-form-item label="排序" prop="sorts">
+						<el-input v-model="colloctTemp2.sorts" type="number" min="1" />
+					</el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click="dialogEditVisible = false">取消</el-button>
+					<el-button type="primary" @click="editRecipe">确定</el-button>
+				</div>
+			</el-dialog>
 			<el-dialog custom-class="p-dialog" :title="collectTextMap[dialogStatus]" :visible.sync="dialogCollectVisible">
 				<el-form ref="colloctForm" :rules="subRules" :model="colloctTemp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
 					<el-form-item label="专题名称" prop="name">
@@ -275,7 +301,8 @@
 		getValidRecipe,
 		addSpecialRecipe,
 		addCookDetailBatch,
-		delCookDetail
+		delCookDetail,
+		editCookSorts
 	} from "@/api/recipesConfig.js";
 	import { getToken } from "@/utils/auth";
 	import Sticky from "@/components/Sticky"; // 粘性header组件
@@ -447,7 +474,15 @@
 					trigger: "blur"
 				}]
 			},
+			subRules2: {
+				sorts: [{
+					required: true,
+					message: "请输入排序",
+					trigger: "blur"
+				}]
+			},
 			dialogCollectVisible: false,
+			dialogEditVisible: false,
 			batchAddVisible: false,
 			colloctTemp: {
 				subjectId: null,
@@ -455,6 +490,14 @@
 				sorts: null,
 				cookId: null
 			},
+			colloctTemp2: {
+				subjectId: null,
+				name: "",
+				sorts: null,
+				cookId: null,
+				cookName: null,
+				sorts: null,
+			}
 		}),
 		computed: {
 			uploadParam() {
@@ -500,39 +543,52 @@
 			setSort() {
 				const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
 				this.sortable = Sortable.create(el, {
-//					ghostClass: 'sortable-ghost',
-//					setData: function(dataTransfer) {
-//						dataTransfer.setData('Text', '')
-//					},
-//					onEnd: evt => {
-//						const targetRow = this.list.splice(evt.oldIndex, 1)[0];
-//						this.list.splice(evt.newIndex, 0, targetRow);
-//					}
+					//					ghostClass: 'sortable-ghost',
+					//					setData: function(dataTransfer) {
+					//						dataTransfer.setData('Text', '')
+					//					},
+					//					onEnd: evt => {
+					//						const targetRow = this.list.splice(evt.oldIndex, 1)[0];
+					//						this.list.splice(evt.newIndex, 0, targetRow);
+					//					}
 				})
 			},
 			//删除专题食谱
 			handleDelete(row) {
-				console.log(row)
-				let param = {
-					subjectId: subjectId,
-					cookId: row.cookId
-				}
-				delCookDetail(param).then(res => {
-					if(res.code == 0) {
+				this.$confirm("确定删除该食谱, 是否继续?", "提示", {
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						type: "warning"
+					})
+					.then(() => {
+						let param = {
+							subjectId: subjectId,
+							cookId: row.cookId
+						}
+						delCookDetail(param).then(res => {
+							if(res.code == 0) {
+								this.$message({
+									type: "success",
+									message: '删除成功',
+									duration: 2000
+								});
+							}
+							this.handleFilter()
+						}, err => {
+							this.$message({
+								type: "success",
+								message: '删除失败' + err,
+								duration: 2000
+							});
+						})
+					})
+					.catch(() => {
 						this.$message({
-							type: "success",
-							message: '删除成功',
-							duration: 2000
+							type: "info",
+							message: "已取消删除"
 						});
-					}
-					this.handleFilter()
-				}, err => {
-					this.$message({
-						type: "success",
-						message: '删除失败' + err,
-						duration: 2000
 					});
-				})
+
 			},
 			//select值变化时
 			//兼更新当页列表食谱选中状态
@@ -732,7 +788,6 @@
 						delete data[key];
 					}
 				}
-				console.log(data)
 				data.subjectId = arr[0];
 				data.page = page;
 				searchList(data).then(response => {
@@ -773,8 +828,8 @@
 				}
 				this.listAll = [];
 				this.totalAll = 0;
-				this.selectedID=[];
-				this.selectedOptions=[];
+				this.selectedID = [];
+				this.selectedOptions = [];
 				this.batchAddVisible = true;
 			},
 			//跳转创建编辑页面
@@ -786,12 +841,31 @@
 					this.$router.push("/resourse/recipes/create");
 				}
 			},
+			toEdit(row) {
+				this.colloctTemp2.cookName = row.name;
+				this.colloctTemp2.sorts = row.sorts;
+				this.colloctTemp2.cookId = row.cookId;
+				this.dialogEditVisible = true;
+			},
+			//保存编辑
+			editRecipe() {
+				let param = JSON.parse(JSON.stringify(this.colloctTemp2));
+				delete param.name;
+				delete param.cookName;
+				console.log(param)
+				editCookSorts(param).then(res => {
+					this.getList()
+					this.dialogEditVisible = false;
+				}, err => {})
+			},
 			getList() {
 				this.listLoading = true;
 				let arr = this.$route.params.id.split("&");
 				this.colloctTemp.subjectId = arr[0];
+				this.colloctTemp2.subjectId = arr[0];
 				subjectId = arr[0];
 				this.colloctTemp.name = arr[1];
+				this.colloctTemp2.name = arr[1];
 				let page = this.listQuery.page;
 				let data = this.listQuery;
 				data = JSON.parse(JSON.stringify(data));
