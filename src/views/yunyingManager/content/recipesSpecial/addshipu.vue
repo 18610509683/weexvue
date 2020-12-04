@@ -546,17 +546,8 @@
 		},
 		methods: {
 			setSort() {
-				const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
-				this.sortable = Sortable.create(el, {
-					//					ghostClass: 'sortable-ghost',
-					//					setData: function(dataTransfer) {
-					//						dataTransfer.setData('Text', '')
-					//					},
-					//					onEnd: evt => {
-					//						const targetRow = this.list.splice(evt.oldIndex, 1)[0];
-					//						this.list.splice(evt.newIndex, 0, targetRow);
-					//					}
-				})
+//				const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+//				this.sortable = Sortable.create(el, {})
 			},
 			//删除专题食谱
 			handleDelete(row) {
