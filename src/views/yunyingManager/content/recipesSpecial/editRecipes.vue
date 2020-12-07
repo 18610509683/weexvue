@@ -19,7 +19,7 @@
 									<el-input v-model="colloctTemp.id" min="1" type="number" placeholder="仅对专题列表内展示有效" disabled v-focus/>
 								</el-form-item>
 								<el-form-item class="floatLeft" label="来源" prop="source">
-									<el-select v-model="colloctTemp.source" placeholder="请选择来源">
+									<el-select disabled v-model="colloctTemp.source" placeholder="请选择来源">
 										<el-option v-for="(item,index) in sourceOptions" :key="index" :label="item.name" :value="item.value" />
 									</el-select>
 								</el-form-item>
@@ -65,13 +65,13 @@
 						<div class="botflex" style="padding: 10px 10px;">
 							<el-form-item style="min-height: 80px;margin-left: 0;">
 								<div>缩略图</div>
-								<el-upload name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess" :file-list="uploadImgList">
+								<el-upload ref="elupload" name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess" :file-list="uploadImgList"  :on-exceed="uploadExceed">
 									<i class="el-icon-plus"></i>
 								</el-upload>
 							</el-form-item>
 							<el-form-item style="min-height: 80px;margin-left: 0;">
 								<div>详情图</div>
-								<el-upload name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview2" :on-remove="handleRemove2" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess2" :file-list="uploadImgList2">
+								<el-upload ref="elupload2" name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview2" :on-remove="handleRemove2" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess2" :file-list="uploadImgList2"  :on-exceed="uploadExceed">
 									<i class="el-icon-plus"></i>
 								</el-upload>
 							</el-form-item>
@@ -107,8 +107,8 @@
 				name: '运营编辑'
 			}],
 			uploadUrl: 'https://fridge-api.mideav.com/admin/RecipeSubject/uploadFile',
-			uploadImgList:[],
-			uploadImgList2:[],
+			uploadImgList: [],
+			uploadImgList2: [],
 			uploadDisabled: false,
 			dialogImageUrl: '',
 			dialogVisible: false,
@@ -239,10 +239,7 @@
 				this.dialogVisible = true;
 			},
 			handleLimit(file, fileList) {
-//				console.log(fileList)
-			},
-			handleRemove(file, fileList) {
-				this.uploadDisabled = false;
+				//				console.log(fileList)
 			},
 			change(e) {
 				//				console.log(e)
@@ -257,12 +254,39 @@
 			 * @description: 上传成功
 			 */
 			uploadImgSuccess(response, file, fileList) {
-				var image = response.data.imgUrl;
-				this.colloctTemp.image = image;
+				if(response.code == 0) {
+					var image = response.data.imgUrl;
+					this.colloctTemp.image = image;
+				} else {
+					this.$message({
+						type: "info",
+						message: "上传失败，" + response.msg,
+						duration: 2000
+					});
+					this.colloctTemp.image = '';
+					this.$refs.elupload.clearFiles();
+				}
 			},
 			uploadImgSuccess2(response, file, fileList) {
-				var infoImage = response.data.imgUrl;
-				this.colloctTemp.infoImage = infoImage;
+				if(response.code == 0) {
+					var infoImage = response.data.imgUrl;
+					this.colloctTemp.infoImage = infoImage;
+				} else {
+					this.$message({
+						type: "info",
+						message: "上传失败，" + response.msg,
+						duration: 2000
+					});
+					this.colloctTemp.infoImage = '';
+					this.$refs.elupload2.clearFiles();
+				}				
+			},
+			//上传失败
+			uploadImgFaild(err, file, fileList) {
+				
+			},
+			uploadImgFaild2(err, file, fileList) {
+
 			},
 			handlePictureCardPreview(file) {
 				this.dialogImageUrl = file.url;
@@ -274,10 +298,15 @@
 			},
 			handleRemove(file, fileList) {
 				this.uploadDisabled = false;
+				this.colloctTemp.image = '';
 			},
 			handleRemove2(file, fileList) {
 				this.uploadDisabled2 = false;
-			},			
+				this.colloctTemp.infoImage = '';
+			},
+			uploadExceed(files, fileList) {
+				this.$message.error("图片只能上传一张，请先删除再上传！");
+			},
 		}
 	}
 </script>

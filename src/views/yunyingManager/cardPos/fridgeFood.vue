@@ -608,7 +608,6 @@
 				delete data.subjectName;
 				delete data.updateTime;
 				delete data.createTime
-				console.log(data)
 				editCardPos(data).then(res => {
 					this.getList();
 					this.cardEditVisible = false;
@@ -639,7 +638,6 @@
 						delete data[k]
 					}
 				}
-				console.log(data)
 				this.getList(data)
 			},
 			navClicked(index) {

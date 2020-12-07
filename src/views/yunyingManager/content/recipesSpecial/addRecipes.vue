@@ -30,13 +30,13 @@
 						<div class="botflex" style="padding: 10px 10px;">
 							<el-form-item style="min-height: 80px;margin-left: 0;">
 								<div>上传缩略图</div>
-								<el-upload name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess">
+								<el-upload ref="elupload" name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess" :on-exceed="uploadExceed">
 									<i class="el-icon-plus"></i>
 								</el-upload>
 							</el-form-item>
 							<el-form-item style="min-height: 80px;margin-left: 0;">
 								<div>上传详情图</div>
-								<el-upload name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview2" :on-remove="handleRemove2" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess2">
+								<el-upload ref="elupload2" name="imageUrl" :action="uploadUrl" list-type="picture-card" :on-preview="handlePictureCardPreview2" :on-remove="handleRemove2" :class="[uploadDisabled?'disabled':'']" :limit="1" :on-success="uploadImgSuccess2"  :on-exceed="uploadExceed">
 									<i class="el-icon-plus"></i>
 								</el-upload>
 							</el-form-item>
@@ -124,7 +124,6 @@
 		watch: {
 			isShow: {
 				handler: function(nv, ov) {
-					console.log(nv)
 					this.colloctTemp = {
 						sorts: "",
 						source: 3,
@@ -137,7 +136,9 @@
 						infoImage: ""
 					}
 					this.$nextTick(() => {
-						this.$refs["colloctForm"].clearValidate();
+						this.$refs["colloctForm"].clearValidate();						
+						this.$refs.elupload.clearFiles();
+						this.$refs.elupload2.clearFiles();
 					});
 				},
 				immediate: false
@@ -150,7 +151,6 @@
 					if(valid) {
 						addRecipes(self.colloctTemp).then((res) => {
 							self.$emit('closed', 1);
-							console.log(res)
 						}, (err) => {
 							console.log(err)
 						})
@@ -207,18 +207,38 @@
 			 * @description: 上传成功
 			 */
 			uploadImgSuccess(response, file, fileList) {
-				var image = response.data.imgUrl;
-				this.colloctTemp.image = image;
+				if(response.code == 0) {
+					var image = response.data.imgUrl;
+					this.colloctTemp.image = image;
+				} else {
+					this.$message({
+						type: "info",
+						message: "上传失败，" + response.msg,
+						duration: 2000
+					});
+					this.colloctTemp.image = '';
+					this.$refs.elupload.clearFiles();
+				}
 			},
 			uploadImgSuccess2(response, file, fileList) {
-				var infoImage = response.data.imgUrl;
-				this.colloctTemp.infoImage = infoImage;
+				if(response.code == 0) {
+					var infoImage = response.data.imgUrl;
+					this.colloctTemp.infoImage = infoImage;
+				} else {
+					this.$message({
+						type: "info",
+						message: "上传失败，" + response.msg,
+						duration: 2000
+					});
+					this.colloctTemp.infoImage = '';
+					this.$refs.elupload2.clearFiles();
+				}
 			},
 			/**
 			 * @description: 删除已上传图片
 			 */
 			uploadImgRemove(file, fileList) {
-				console.log(file, fileList)
+//				console.log(file, fileList)
 			},
 			/**
 			 * @description: 上传图片预览

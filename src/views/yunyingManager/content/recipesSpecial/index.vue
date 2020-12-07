@@ -408,13 +408,6 @@
 			handleCreateColl(isGood) {
 				this.dialogStatus = 'create';
 				this.isShow = true;
-				//				this.isGood = isGood;
-				//				this.resetCollectTemp();
-				//				this.dialogStatus = "create";
-				//				this.dialogCollectVisible = true;
-				//				this.$nextTick(() => {
-				//					this.$refs["colloctForm"].clearValidate();
-				//				});
 			},
 			//跳转创建编辑页面
 			toCreate(id,name) {

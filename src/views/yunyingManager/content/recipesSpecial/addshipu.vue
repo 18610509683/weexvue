@@ -848,7 +848,6 @@
 				let param = JSON.parse(JSON.stringify(this.colloctTemp2));
 				delete param.name;
 				delete param.cookName;
-				console.log(param)
 				editCookSorts(param).then(res => {
 					this.getList()
 					this.dialogEditVisible = false;

@@ -133,7 +133,7 @@
 				</el-form-item>
 
 				<el-form-item label="封面图" prop="image" ref="uploadFormItem">
-					<el-upload class="upload-demo" name="img_url" :action="'https://fridge-api.mideav.com/admin' + '/rubbish/uploadImg'" :file-list="uploadImgList" :on-preview="handleUploadImgPreview" :on-remove="uploadImgRemove" :on-success="uploadImgSuccess" :on-exceed="uploadExceed" :data="uploadParam" :limit="1" list-type="picture-card">
+					<el-upload ref="elupload" class="upload-demo" name="img_url" :action="'https://fridge-api.mideav.com/admin' + '/rubbish/uploadImg'" :file-list="uploadImgList" :on-preview="handleUploadImgPreview" :on-remove="uploadImgRemove" :on-success="uploadImgSuccess" :on-exceed="uploadExceed" :data="uploadParam" :limit="1" list-type="picture-card">
 						<i class="el-icon-plus"></i>
 					</el-upload>
 				</el-form-item>
@@ -683,12 +683,17 @@
 			},
 			//上传成功
 			uploadImgSuccess(response, file, fileList) {
-				if(fileList.length > 0) {
-					this.temp.image = response.data.all_img_url;
-					//移除必填的提醒
-					// this.$refs["uploadFormItem"].clearValidate();
+				if(response.code == 0||response.code==200) {
+					var image = response.data.all_img_url;
+					this.temp.image = image;
 				} else {
-					this.temp.image = "";
+					this.$message({
+						type: "info",
+						message: "上传失败，" + response.error_list,
+						duration: 2000
+					});
+					this.temp.image = '';
+					this.$refs.elupload.clearFiles();
 				}
 			},
 			//删除图片
